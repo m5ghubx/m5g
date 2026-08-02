@@ -1,0 +1,2354 @@
+# pages.py  -  M5G v9.8
+# شامل: LOGIN_HTML, DASHBOARD_HTML, get_public_page_html()
+
+# لوگوی  (به‌صورت base64 داخلی، بدون نیاز به هاست خارجی)
+LOGO_B64 = "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
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ورود · M5G</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#060f1d;--card:rgba(10,22,40,0.9);--accent:#3B82F6;--text:#E8F4FF;--dim:#3D6B8E;--mid:#7BAED4;--border:rgba(59,130,246,0.2)}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Vazirmatn',sans-serif;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+.bg{position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(59,130,246,0.1),transparent 70%),var(--bg);z-index:0}
+.grid{position:fixed;inset:0;background-image:linear-gradient(rgba(59,130,246,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.04) 1px,transparent 1px);background-size:44px 44px;z-index:0}
+.orb{position:fixed;border-radius:50%;filter:blur(90px);z-index:0;animation:fl 9s ease-in-out infinite}
+.o1{width:380px;height:380px;background:rgba(59,130,246,0.07);top:-100px;right:-80px}
+.o2{width:280px;height:280px;background:rgba(16,185,129,0.04);bottom:-60px;left:-60px;animation-delay:4s}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+.wrap{position:relative;z-index:10;width:100%;max-width:400px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:38px 34px 34px;backdrop-filter:blur(24px);box-shadow:0 0 80px rgba(59,130,246,0.07),0 20px 60px rgba(0,0,0,.5)}
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.brand-img{width:48px;height:48px;border-radius:50%;overflow:hidden;border:1px solid var(--border);box-shadow:0 0 20px rgba(139,92,246,0.35),0 0 12px rgba(59,130,246,0.3);flex-shrink:0}
+.brand-img img{width:100%;height:100%;object-fit:cover}
+.brand-name{font-size:16px;font-weight:700;color:var(--text)}
+.brand-sub{font-size:11px;color:var(--dim);margin-top:2px}
+h1{font-size:21px;font-weight:700;color:var(--text);margin-bottom:5px;letter-spacing:-.02em}
+.sub{font-size:12px;color:var(--mid);margin-bottom:24px;line-height:1.6}
+.hint{display:flex;align-items:center;gap:10px;background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.15);border-radius:10px;padding:10px 14px;margin-bottom:20px}
+.hint-label{font-size:11px;color:var(--dim);flex:1}
+.hint-val{font-family:ui-monospace,monospace;font-size:14px;font-weight:700;color:var(--accent);background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);padding:3px 11px;border-radius:7px;cursor:pointer;transition:.15s;letter-spacing:.08em}
+.hint-val:hover{background:rgba(59,130,246,0.22)}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:10.5px;font-weight:600;color:var(--mid);margin-bottom:7px;text-transform:uppercase;letter-spacing:.06em}
+.inp-wrap{position:relative}
+input[type=password]{width:100%;padding:13px 44px 13px 16px;border-radius:11px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:.2s}
+input[type=password]:focus{border-color:rgba(59,130,246,.55);background:rgba(0,0,0,.4);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:18px;pointer-events:none;transition:.2s}
+input:focus+.ic{color:var(--accent)}
+.err{display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#F87171;align-items:center;gap:8px}
+.err.show{display:flex}
+.btn{width:100%;padding:13px;border-radius:11px;border:none;cursor:pointer;background:linear-gradient(135deg,#2F8FFF,#8B5CF6);color:#fff;font-family:inherit;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 20px rgba(139,92,246,.35);transition:.2s;position:relative;overflow:hidden}
+.btn::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.08);opacity:0;transition:.2s}
+.btn:hover::before{opacity:1}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.footer{margin-top:22px;padding-top:18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:8px;font-size:11px;color:var(--dim)}
+.footer a{color:var(--accent);font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="grid"></div>
+<div class="orb o1"></div><div class="orb o2"></div>
+<div class="wrap">
+  <div class="card">
+    <div class="brand">
+      <div class="brand-img"><img src="data:image/png;base64,__LOGO_B64__" alt="M5G"></div>
+      <div><div class="brand-name">M5G</div><div class="brand-sub">v9.8</div></div>
+    </div>
+    <h1>ورود به پنل</h1>
+    <p class="sub">رمز عبور را برای دسترسی به داشبورد وارد کنید</p>
+    <div class="err" id="err"><i class="ti ti-alert-circle"></i><span id="err-text"></span></div>
+    <div class="hint">
+      <span class="hint-label">رمز پیش‌فرض سیستم</span>
+      <span class="hint-val" onclick="document.getElementById('pw').value='M5GPANEL';document.getElementById('pw').focus()">M5GPANEL</span>
+    </div>
+    <form id="form">
+      <div class="field">
+        <label>رمز عبور</label>
+        <div class="inp-wrap">
+          <input type="password" id="pw" placeholder="رمز عبور را وارد کنید" autofocus required>
+          <i class="ti ti-lock ic"></i>
+        </div>
+      </div>
+      <button class="btn" type="submit" id="btn"><i class="ti ti-login-2"></i> ورود به داشبورد</button>
+    </form>
+    <div class="footer">پشتیبانی <a href="https://t.me/M5GHUB" target="_blank"><i class="ti ti-brand-telegram"></i>@M5GHUB</a></div>
+  </div>
+</div>
+<script>
+document.getElementById('form').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const btn=document.getElementById('btn'),err=document.getElementById('err'),et=document.getElementById('err-text');
+  err.classList.remove('show');btn.disabled=true;
+  btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> در حال ورود...';
+  try{
+    const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:document.getElementById('pw').value})});
+    if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(d.detail||'خطا');}
+    location.href='/dashboard';
+  }catch(e){
+    et.textContent=e.message;err.classList.add('show');
+    btn.disabled=false;btn.innerHTML='<i class="ti ti-login-2"></i> ورود به داشبورد';
+  }
+});
+</script>
+</body></html>"""
+
+
+DASHBOARD_HTML = r"""<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X4G</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#060f1d;--bg2:#0a1628;--bg3:#0e1e35;
+  --card:#0d1b2e;--card-b:rgba(59,130,246,0.13);--card-bh:rgba(59,130,246,0.28);
+  --accent:#3B82F6;--accent2:#60A5FA;--accent-d:rgba(59,130,246,0.12);
+  --green:#10B981;--green-bg:rgba(16,185,129,0.1);--green-t:#34D399;
+  --red:#EF4444;--red-bg:rgba(239,68,68,0.1);--red-t:#F87171;
+  --amber:#F59E0B;--amber-bg:rgba(245,158,11,0.1);--amber-t:#FCD34D;
+  --purple:#8B5CF6;--purple-bg:rgba(139,92,246,0.1);
+  --t1:#E8F4FF;--t2:#7BAED4;--t3:#3D6B8E;
+  --sidebar-w:248px;--radius:16px;
+  --shadow:0 4px 24px rgba(0,0,0,0.35);
+}
+[data-theme="light"]{
+  --bg:#F0F4FA;--bg2:#E4EDF9;--bg3:#D5E3F5;
+  --card:#FFFFFF;--card-b:rgba(59,130,246,0.15);--card-bh:rgba(59,130,246,0.35);
+  --accent:#2563EB;--accent2:#1D4ED8;--accent-d:rgba(37,99,235,0.08);
+  --green:#059669;--green-bg:rgba(5,150,105,0.08);--green-t:#065F46;
+  --red:#DC2626;--red-bg:rgba(220,38,38,0.08);--red-t:#991B1B;
+  --amber:#D97706;--amber-bg:rgba(217,119,6,0.08);--amber-t:#92400E;
+  --purple:#7C3AED;--purple-bg:rgba(124,58,237,0.08);
+  --t1:#0F172A;--t2:#334155;--t3:#64748B;
+  --shadow:0 4px 20px rgba(0,0,0,0.1);
+}
+html,body{height:100%}
+body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;display:flex;font-size:14px;transition:background .3s,color .3s}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:3px}
+a{color:inherit;text-decoration:none}
+.sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--bg2);border-left:1px solid var(--card-b);display:flex;flex-direction:column;flex-shrink:0;position:fixed;right:0;top:0;bottom:0;z-index:200;transition:transform .25s cubic-bezier(.4,0,.2,1),background .3s,border-color .3s}
+.logo{display:flex;align-items:center;gap:12px;padding:20px 16px 16px;border-bottom:1px solid var(--card-b)}
+.logo-img{width:38px;height:38px;border-radius:50%;overflow:hidden;border:1px solid var(--card-b);box-shadow:0 0 14px rgba(139,92,246,.3),0 0 8px rgba(59,130,246,.25);flex-shrink:0}
+.logo-img img{width:100%;height:100%;object-fit:cover}
+.logo-name{font-size:13.5px;font-weight:700;color:var(--t1)}
+.logo-sub{font-size:10px;color:var(--t3);margin-top:1px}
+.sb-close{display:none;position:absolute;left:12px;top:20px;background:var(--accent-d);border:1px solid var(--card-b);color:var(--t2);width:30px;height:30px;border-radius:8px;font-size:16px;align-items:center;justify-content:center;cursor:pointer}
+.nav-wrap{flex:1;overflow-y:auto;padding:6px 0 8px}
+.nav-sec{padding:14px 14px 4px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);font-weight:700}
+.nav-it{display:flex;align-items:center;gap:9px;padding:9px 14px;color:var(--t3);font-size:12.5px;cursor:pointer;border-right:2px solid transparent;transition:all .15s;margin:1px 6px}
+.nav-it i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
+.nav-it:hover{background:var(--accent-d);color:var(--t2)}
+.nav-it.on{background:var(--accent-d);color:var(--t1);border-right-color:var(--accent);font-weight:600}
+.nav-badge{margin-right:auto;background:rgba(59,130,246,0.15);color:var(--accent2);font-size:9px;padding:1px 6px;border-radius:20px;font-weight:700}
+.sb-foot{padding:12px 14px;border-top:1px solid var(--card-b)}
+.tg-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#0098e6,#0077bb);color:#fff;border-radius:9px;padding:10px;font-size:12.5px;font-weight:600;font-family:inherit;border:none;cursor:pointer;width:100%;transition:.15s}
+.tg-btn:hover{filter:brightness(1.1)}
+.theme-btn{display:flex;align-items:center;justify-content:center;gap:7px;background:var(--accent-d);color:var(--t2);border-radius:9px;padding:8px;font-size:12px;font-weight:500;font-family:inherit;border:1px solid var(--card-b);cursor:pointer;width:100%;transition:.15s;margin-bottom:7px}
+.theme-btn:hover{background:var(--card-b);color:var(--t1)}
+.logout-btn{display:flex;align-items:center;justify-content:center;gap:7px;background:var(--red-bg);color:var(--red-t);border-radius:9px;padding:8px;font-size:12px;font-weight:500;font-family:inherit;border:1px solid rgba(239,68,68,0.2);cursor:pointer;width:100%;transition:.15s;margin-top:6px}
+.logout-btn:hover{background:rgba(239,68,68,0.2)}
+.mob-top{display:none;position:fixed;top:0;right:0;left:0;height:52px;background:var(--bg2);border-bottom:1px solid var(--card-b);z-index:150;align-items:center;justify-content:space-between;padding:0 14px;transition:background .3s}
+.mob-top .ml{display:flex;align-items:center;gap:9px}
+.mob-logo{width:28px;height:28px;border-radius:50%;overflow:hidden;box-shadow:0 0 8px rgba(139,92,246,.35)}
+.mob-logo img{width:100%;height:100%;object-fit:cover}
+.mob-title{color:var(--t1);font-size:13px;font-weight:700}
+.mob-right{display:flex;gap:6px}
+.menu-btn,.theme-mob{background:var(--accent-d);border:1px solid var(--card-b);color:var(--t2);width:34px;height:34px;border-radius:8px;font-size:17px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:190;backdrop-filter:blur(3px)}
+.overlay.show{display:block}
+.main{margin-right:var(--sidebar-w);flex:1;padding:28px 28px 60px;min-width:0;transition:margin .25s}
+.pg{display:none}
+.pg.on{display:block;animation:fi .2s ease}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.tb-title{font-size:18px;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:8px;letter-spacing:-.02em}
+.tb-title i{color:var(--accent);font-size:20px}
+.tb-sub{font-size:11px;color:var(--t3);margin-top:4px}
+.tb-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.badge{font-size:10px;padding:3px 10px;border-radius:20px;font-weight:700;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.bg-green{background:var(--green-bg);color:var(--green-t)}
+.bg-blue{background:var(--accent-d);color:var(--accent2)}
+.bg-amber{background:var(--amber-bg);color:var(--amber-t)}
+.bg-red{background:var(--red-bg);color:var(--red-t)}
+.bg-purple{background:var(--purple-bg);color:#A78BFA}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;display:inline-block}
+.dg{background:var(--green)}.dr{background:var(--red)}.da{background:var(--amber)}.db{background:var(--accent)}
+.pulse{animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}
+.metric{background:var(--card);border:1px solid var(--card-b);border-radius:var(--radius);padding:17px 17px 14px;transition:all .2s;position:relative;overflow:hidden;cursor:default}
+.metric::after{content:'';position:absolute;top:0;right:0;width:3px;height:100%;background:var(--accent);opacity:0;transition:.2s}
+.metric:hover{border-color:var(--card-bh);transform:translateY(-2px);box-shadow:var(--shadow)}
+.metric:hover::after{opacity:1}
+.metric.suc::after{background:var(--green)}
+.metric.dan::after{background:var(--red)}
+/* ══════ صفحه ترافیک - ریدیزاین ══════ */
+.traf-hero{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:13px;margin-bottom:18px}
+.traf-main-stat{background:linear-gradient(155deg,var(--bg3) 0%,var(--card) 60%);border:1px solid var(--card-b);border-radius:20px;padding:22px 24px;position:relative;overflow:hidden}
+.traf-main-stat::before{content:'';position:absolute;top:-50px;left:-50px;width:200px;height:200px;background:radial-gradient(circle,var(--accent-d),transparent 70%);pointer-events:none}
+.traf-main-label{font-size:10.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:6px;margin-bottom:10px;position:relative;z-index:1}
+.traf-main-val{font-size:34px;font-weight:800;color:var(--t1);line-height:1;letter-spacing:-.02em;display:flex;align-items:baseline;gap:6px;position:relative;z-index:1}
+.traf-main-val span{font-size:14px;font-weight:500;color:var(--t3)}
+.traf-trend{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;margin-top:12px;position:relative;z-index:1}
+.traf-trend.up{background:var(--green-bg);color:var(--green-t)}
+.traf-trend.down{background:var(--red-bg);color:var(--red-t)}
+.traf-mini{background:var(--card);border:1px solid var(--card-b);border-radius:20px;padding:18px 19px;display:flex;flex-direction:column;justify-content:space-between;transition:.2s}
+.traf-mini:hover{border-color:var(--card-bh);transform:translateY(-2px)}
+.traf-mini-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.traf-mini-icon{width:32px;height:32px;border-radius:9px;background:var(--accent-d);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px}
+.traf-mini-icon.pk{background:var(--amber-bg);color:var(--amber)}
+.traf-mini-icon.lo{background:var(--purple-bg);color:var(--purple)}
+.traf-mini-label{font-size:9.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.traf-mini-val{font-size:21px;font-weight:800;color:var(--t1);letter-spacing:-.01em}
+.traf-mini-sub{font-size:9.5px;color:var(--t3);margin-top:3px}
+
+.traf-chart-card{background:var(--card);border:1px solid var(--card-b);border-radius:22px;padding:22px 24px 18px;box-shadow:var(--shadow);margin-bottom:16px}
+.traf-chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:10px}
+.traf-chart-title{font-size:14px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:8px}
+.traf-chart-title i{color:var(--accent);font-size:18px}
+.traf-chart-sub{font-size:10.5px;color:var(--t3);margin-top:3px}
+.traf-legend{display:flex;gap:14px;align-items:center}
+.traf-legend-item{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--t2);font-weight:600}
+.traf-legend-dot{width:8px;height:8px;border-radius:3px}
+.traf-range-tabs{display:flex;gap:4px;background:var(--accent-d);padding:3px;border-radius:10px;border:1px solid var(--card-b)}
+.traf-range-tab{padding:6px 13px;border-radius:8px;font-size:10.5px;font-weight:700;color:var(--t3);cursor:pointer;transition:.15s;border:none;background:transparent;font-family:inherit}
+.traf-range-tab.on{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(59,130,246,.35)}
+.traf-chart-body{height:320px;margin-top:14px;position:relative}
+
+@media(max-width:900px){.traf-hero{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.traf-hero{grid-template-columns:1fr}.traf-chart-body{height:260px}}
+.m-icon{width:34px;height:34px;border-radius:8px;background:var(--accent-d);display:flex;align-items:center;justify-content:center;margin-bottom:11px;color:var(--accent);font-size:17px}
+.m-icon.suc{background:var(--green-bg);color:var(--green)}
+.m-icon.dan{background:var(--red-bg);color:var(--red)}
+.m-icon.pur{background:var(--purple-bg);color:var(--purple)}
+.m-label{font-size:10px;color:var(--t3);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.m-val{font-size:25px;font-weight:700;color:var(--t1);line-height:1;letter-spacing:-.02em}
+.m-unit{font-size:12px;font-weight:400;color:var(--t3)}
+.m-sub{font-size:10px;color:var(--t3);margin-top:6px;display:flex;align-items:center;gap:3px}
+.vless-box{background:linear-gradient(135deg,var(--bg3) 0%,var(--bg2) 100%);border:1px solid var(--card-b);border-radius:18px;padding:20px 22px;margin-bottom:18px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:background .3s}
+.vless-box::before{content:'';position:absolute;top:-50px;left:-50px;width:180px;height:180px;background:radial-gradient(circle,var(--accent-d),transparent 70%);pointer-events:none}
+.vl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;flex-wrap:wrap;gap:8px}
+.vl-title{color:var(--t2);font-size:11px;display:flex;align-items:center;gap:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.vl-title i{color:var(--accent);font-size:15px}
+.vl-code{background:rgba(0,0,0,.18);border:1px solid var(--card-b);border-radius:9px;padding:13px 15px;font-size:11px;font-family:ui-monospace,monospace;color:var(--accent2);word-break:break-all;line-height:1.8;letter-spacing:.01em}
+[data-theme="light"] .vl-code{background:rgba(0,0,0,.04)}
+.vl-actions{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap}
+.btn{font-family:inherit;font-size:12px;font-weight:500;border-radius:9px;padding:8px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;border:none;transition:all .15s;white-space:nowrap}
+.btn i{font-size:13px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-p{background:linear-gradient(135deg,#2F8FFF,#8B5CF6);color:#fff;box-shadow:0 2px 14px rgba(139,92,246,.35)}
+.btn-p:hover{background:#2563EB;box-shadow:0 4px 18px rgba(59,130,246,.4)}
+.btn-o{background:transparent;border:1px solid var(--card-b);color:var(--t2)}
+.btn-o:hover{background:var(--accent-d);border-color:rgba(59,130,246,.3)}
+.btn-g{background:var(--accent-d);color:var(--accent2);border:1px solid rgba(59,130,246,.15)}
+.btn-g:hover{background:rgba(59,130,246,.22)}
+.btn-d{background:var(--red-bg);color:var(--red-t);border:1px solid rgba(239,68,68,.2)}
+.btn-d:hover{background:rgba(239,68,68,.2)}
+.btn-pur{background:var(--purple-bg);color:#A78BFA;border:1px solid rgba(139,92,246,.2)}
+.btn-pur:hover{background:rgba(139,92,246,.22)}
+.btn-amber{background:var(--amber-bg);color:var(--amber-t);border:1px solid rgba(245,158,11,.2)}
+.btn-amber:hover{background:rgba(245,158,11,.22)}
+.btn-sm{padding:5px 9px;font-size:10.5px;border-radius:7px}
+.btn-icon{width:30px;height:30px;padding:0;justify-content:center;border-radius:5px}
+.card{background:var(--card);border:1px solid var(--card-b);border-radius:var(--radius);padding:18px 20px;transition:border-color .2s,background .3s}
+.card:hover{border-color:var(--card-bh)}
+.card-title{font-size:12.5px;font-weight:700;color:var(--t1);margin-bottom:15px;display:flex;align-items:center;gap:7px}
+.card-title i{font-size:16px;color:var(--accent)}
+.ml-auto{margin-right:auto}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:2fr 1fr;gap:13px;margin-bottom:16px}
+.mb16{margin-bottom:16px}
+.sr{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(59,130,246,0.05);font-size:12px}
+.sr:last-child{border-bottom:none}
+.sr-k{color:var(--t2);display:flex;align-items:center;gap:6px}
+.sr-k i{font-size:13px;color:var(--t3)}
+.sr-v{color:var(--t1);font-weight:600;font-size:11.5px}
+.ch{position:relative;height:230px}
+.ch-lg{position:relative;height:330px}
+.ch-sm{position:relative;height:185px}
+.exp-chip{font-size:9px;padding:3px 8px;border-radius:6px;font-weight:700;display:inline-flex;align-items:center;gap:3px}
+.ec-ok{background:var(--green-bg);color:var(--green-t)}
+.ec-warn{background:var(--amber-bg);color:var(--amber-t)}
+.ec-exp{background:var(--red-bg);color:var(--red-t)}
+.ec-inf{background:var(--accent-d);color:var(--accent2)}
+.tog{width:19px;height:34px;border-radius:19px;background:rgba(100,116,139,0.25);position:relative;cursor:pointer;transition:.2s;flex-shrink:0;border:none}
+.tog::after{content:'';position:absolute;width:13px;height:13px;border-radius:50%;background:#fff;left:3px;bottom:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.tog.on{background:var(--green)}
+.tog.on::after{bottom:18px}
+.form-row{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.fi,.fs{padding:9px 12px;border-radius:9px;border:1px solid var(--card-b);background:rgba(0,0,0,.18);color:var(--t1);font-family:inherit;font-size:12px;outline:none;transition:.15s;min-width:100px}
+[data-theme="light"] .fi,[data-theme="light"] .fs{background:rgba(0,0,0,.04)}
+.fi::placeholder{color:var(--t3)}
+.fi:focus,.fs:focus{border-color:rgba(59,130,246,.45);background:rgba(0,0,0,.25);box-shadow:0 0 0 3px rgba(59,130,246,.08)}
+.fs option{background:var(--bg2)}
+[data-theme="light"] .fs option{background:#fff}
+.cl{background:var(--accent-d);border:1px solid rgba(59,130,246,.15);border-radius:10px;padding:11px 13px;font-size:11px;color:var(--t2);display:flex;gap:9px;align-items:flex-start;line-height:1.8;margin-top:12px}
+.cl i{font-size:15px;color:var(--accent);margin-top:1px;flex-shrink:0}
+.cl.amber{background:var(--amber-bg);border-color:rgba(245,158,11,.2);color:var(--amber-t)}
+/* ══════ پنل ساخت کانفیگ - طراحی جدید ══════ */
+.create-panel{background:linear-gradient(155deg,var(--bg3) 0%,var(--card) 55%);border:1px solid var(--card-b);border-radius:22px;padding:0;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;position:relative}
+.create-panel::before{content:'';position:absolute;top:-60px;left:-60px;width:220px;height:220px;background:radial-gradient(circle,var(--accent-d),transparent 70%);pointer-events:none}
+.cp-head{display:flex;align-items:center;gap:13px;padding:22px 24px 18px;position:relative;z-index:1}
+.cp-head-icon{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0;box-shadow:0 6px 18px rgba(59,130,246,.35)}
+.cp-head-text{flex:1;min-width:0}
+.cp-head-title{font-size:15px;font-weight:800;color:var(--t1);letter-spacing:-.01em}
+.cp-head-sub{font-size:11px;color:var(--t3);margin-top:2px}
+.cp-body{padding:2px 24px 22px;position:relative;z-index:1}
+.cp-row{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-bottom:16px}
+.cp-block{background:rgba(0,0,0,.14);border:1px solid var(--card-b);border-radius:14px;padding:14px 16px}
+[data-theme="light"] .cp-block{background:rgba(37,99,235,.03)}
+.cp-block-label{font-size:10px;font-weight:800;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:6px;margin-bottom:11px}
+.cp-block-label i{color:var(--accent);font-size:14px}
+.cp-input-full{width:100%;padding:10px 13px;border-radius:10px;border:1px solid var(--card-b);background:rgba(0,0,0,.18);color:var(--t1);font-family:inherit;font-size:12.5px;outline:none;transition:.15s}
+[data-theme="light"] .cp-input-full{background:#fff}
+.cp-input-full:focus{border-color:rgba(59,130,246,.5);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.cp-input-full::placeholder{color:var(--t3)}
+.cp-mini-row{display:flex;gap:8px;margin-top:9px}
+.cp-quota-inputs{display:flex;gap:8px}
+.cp-quota-inputs .cp-input-full{flex:1}
+.cp-quota-inputs select.cp-input-full{flex:0 0 76px}
+.chip-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.chip{font-size:10.5px;font-weight:700;padding:5px 12px;border-radius:8px;background:var(--accent-d);color:var(--t2);border:1px solid var(--card-b);cursor:pointer;transition:.15s;white-space:nowrap}
+.chip:hover{background:rgba(59,130,246,.18);color:var(--accent2)}
+.chip.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 3px 10px rgba(59,130,246,.35)}
+.proto-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.proto-card{border:1.5px solid var(--card-b);border-radius:13px;padding:13px 12px;cursor:pointer;transition:.18s;text-align:center;position:relative;background:rgba(0,0,0,.1)}
+[data-theme="light"] .proto-card{background:#fff}
+.proto-card:hover{border-color:var(--card-bh);transform:translateY(-1px)}
+.proto-card.active{border-color:var(--accent);background:var(--accent-d);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.proto-card.active .proto-card-check{opacity:1;transform:scale(1)}
+.proto-card-check{position:absolute;top:7px;left:7px;width:16px;height:16px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.5);transition:.18s}
+.proto-card-icon{width:32px;height:32px;border-radius:9px;background:var(--accent-d);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:16px;margin:0 auto 8px}
+.proto-card.active .proto-card-icon{background:var(--accent);color:#fff}
+.proto-card-title{font-size:11px;font-weight:800;color:var(--t1)}
+.proto-card-desc{font-size:9px;color:var(--t3);margin-top:3px;line-height:1.5}
+.cp-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:16px;border-top:1px solid var(--card-b);flex-wrap:wrap}
+.cp-footer-note{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--t3);line-height:1.7;flex:1;min-width:220px}
+.cp-footer-note i{color:var(--accent);font-size:15px;flex-shrink:0}
+.cp-submit-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:13px;padding:13px 26px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 6px 20px rgba(59,130,246,.35);transition:.18s;white-space:nowrap}
+.cp-submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(59,130,246,.45)}
+.cp-submit-btn:active{transform:translateY(0) scale(.98)}
+@media(max-width:760px){
+  .cp-row{grid-template-columns:1fr}
+  .proto-cards{grid-template-columns:1fr}
+  .cp-footer{flex-direction:column;align-items:stretch}
+  .cp-submit-btn{justify-content:center}
+}
+/* ══════ پنل اطلاعات سرور ══════ */
+.srv-panel{background:linear-gradient(155deg,var(--bg3) 0%,var(--card) 60%);border:1px solid var(--card-b);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);position:relative}
+.srv-panel::before{content:'';position:absolute;top:-60px;left:-60px;width:200px;height:200px;background:radial-gradient(circle,var(--accent-d),transparent 70%);pointer-events:none}
+.srv-hero{display:flex;align-items:center;gap:14px;padding:22px 24px;position:relative;z-index:1;border-bottom:1px solid var(--card-b)}
+.srv-hero-icon{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;flex-shrink:0;box-shadow:0 6px 18px rgba(59,130,246,.35)}
+.srv-hero-text{flex:1;min-width:0}
+.srv-hero-domain{font-size:15px;font-weight:800;color:var(--t1);word-break:break-all}
+.srv-hero-sub{font-size:10.5px;color:var(--t3);margin-top:4px;display:flex;align-items:center;gap:6px}
+.srv-tiles{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:20px 22px 22px;position:relative;z-index:1}
+.srv-tile{display:flex;align-items:center;gap:11px;background:rgba(0,0,0,.14);border:1px solid var(--card-b);border-radius:13px;padding:12px 14px;transition:.18s}
+[data-theme="light"] .srv-tile{background:rgba(37,99,235,.03)}
+.srv-tile:hover{border-color:var(--card-bh);transform:translateY(-1px)}
+.srv-tile-icon{width:34px;height:34px;border-radius:10px;background:var(--accent-d);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.srv-tile-text{min-width:0}
+.srv-tile-label{font-size:9.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.srv-tile-val{font-size:12px;font-weight:700;color:var(--t1);word-break:break-word}
+
+/* ══════ پنل تغییر رمز ══════ */
+.pw-panel{background:linear-gradient(155deg,var(--bg3) 0%,var(--card) 60%);border:1px solid var(--card-b);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);position:relative}
+.pw-panel::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,var(--purple-bg),transparent 70%);pointer-events:none}
+.pw-hero{display:flex;align-items:center;gap:14px;padding:22px 24px 18px;position:relative;z-index:1}
+.pw-hero-icon{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,var(--purple),#6D48D6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;flex-shrink:0;box-shadow:0 6px 18px rgba(139,92,246,.35)}
+.pw-hero-text{flex:1;min-width:0}
+.pw-hero-title{font-size:15px;font-weight:800;color:var(--t1)}
+.pw-hero-sub{font-size:10.5px;color:var(--t3);margin-top:3px}
+.pw-body{padding:2px 24px 22px;position:relative;z-index:1}
+.pw-field{position:relative;margin-bottom:13px}
+.pw-field label{display:block;font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.pw-input{width:100%;padding:11px 42px 11px 14px;border-radius:11px;border:1px solid var(--card-b);background:rgba(0,0,0,.18);color:var(--t1);font-family:inherit;font-size:12.5px;outline:none;transition:.15s}
+[data-theme="light"] .pw-input{background:#fff}
+.pw-input:focus{border-color:rgba(139,92,246,.5);box-shadow:0 0 0 3px rgba(139,92,246,.1)}
+.pw-eye{position:absolute;left:12px;top:34px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;padding:4px;display:flex}
+.pw-eye:hover{color:var(--purple)}
+.pw-strength{height:4px;border-radius:3px;background:var(--accent-d);margin-top:8px;overflow:hidden;display:flex;gap:3px}
+.pw-strength-seg{flex:1;height:100%;border-radius:3px;background:rgba(100,116,139,.2);transition:.25s}
+.pw-strength-label{font-size:9.5px;color:var(--t3);margin-top:5px;display:flex;align-items:center;gap:5px}
+.pw-reqs{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px;margin-bottom:16px}
+.pw-req{font-size:9.5px;padding:4px 10px;border-radius:7px;background:var(--accent-d);color:var(--t3);font-weight:600;display:flex;align-items:center;gap:4px;transition:.18s}
+.pw-req.met{background:var(--green-bg);color:var(--green-t)}
+.pw-submit{width:100%;justify-content:center;background:linear-gradient(135deg,var(--purple),#6D48D6);color:#fff;border:none;border-radius:12px;padding:12px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 6px 18px rgba(139,92,246,.32);transition:.18s}
+.pw-submit:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(139,92,246,.42)}
+.pw-submit:active{transform:translateY(0) scale(.98)}
+
+/* ══════ اتصالات فعال - نسخه پیشرفته ══════ */
+.conn-hero{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.conn-hero-tile{background:var(--card);border:1px solid var(--card-b);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden;transition:.2s}
+.conn-hero-tile:hover{border-color:var(--card-bh);transform:translateY(-2px);box-shadow:var(--shadow)}
+.conn-hero-tile::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),transparent)}
+.conn-hero-icon{width:32px;height:32px;border-radius:9px;background:var(--green-bg);color:var(--green-t);display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:10px}
+.conn-hero-tile:nth-child(2) .conn-hero-icon{background:var(--accent-d);color:var(--accent)}
+.conn-hero-tile:nth-child(3) .conn-hero-icon{background:var(--purple-bg);color:var(--purple)}
+.conn-hero-tile:nth-child(4) .conn-hero-icon{background:var(--amber-bg);color:var(--amber)}
+.conn-hero-label{font-size:9.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.conn-hero-val{font-size:21px;font-weight:800;color:var(--t1);line-height:1;letter-spacing:-.02em}
+.conn-hero-unit{font-size:11px;color:var(--t3);font-weight:500}
+
+.conn-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.conn-toolbar-title{font-size:12px;font-weight:800;color:var(--t2);display:flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:.06em}
+.conn-toolbar-title i{color:var(--green);font-size:15px}
+.conn-live-badge{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;color:var(--green-t);background:var(--green-bg);padding:5px 12px;border-radius:20px;border:1px solid rgba(16,185,129,.2)}
+.conn-live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.6s infinite}
+
+.conn-grid-v2{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.conn-card-v2{background:var(--card);border:1px solid var(--card-b);border-radius:18px;padding:0;overflow:hidden;transition:all .22s cubic-bezier(.4,0,.2,1);position:relative}
+.conn-card-v2:hover{border-color:var(--card-bh);transform:translateY(-3px);box-shadow:0 14px 32px rgba(0,0,0,.22)}
+.conn-card-v2-glow{position:absolute;top:-40px;left:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(16,185,129,.1),transparent 70%);pointer-events:none}
+.conn-card-v2-top{display:flex;align-items:center;gap:12px;padding:16px 17px 13px;position:relative;z-index:1}
+.conn-avatar{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--green),#0D9668);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0;position:relative;box-shadow:0 4px 14px rgba(16,185,129,.3)}
+.conn-avatar::after{content:'';position:absolute;inset:-4px;border-radius:16px;border:1.5px solid var(--green);opacity:.4;animation:breathe2 2.4s ease-in-out infinite}
+@keyframes breathe2{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.12);opacity:0}}
+.conn-card-v2-id{flex:1;min-width:0}
+.conn-ip-v2{font-family:ui-monospace,monospace;font-size:14px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:6px}
+.conn-ip-copy{background:none;border:none;color:var(--t3);cursor:pointer;font-size:12px;padding:2px;display:flex;transition:.15s}
+.conn-ip-copy:hover{color:var(--accent)}
+.conn-label-v2{font-size:10.5px;color:var(--t3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conn-status-pill{font-size:9px;font-weight:800;padding:4px 9px;border-radius:20px;background:var(--green-bg);color:var(--green-t);display:flex;align-items:center;gap:4px;white-space:nowrap;flex-shrink:0}
+.conn-card-v2-divider{height:1px;background:linear-gradient(90deg,transparent,var(--card-b) 15%,var(--card-b) 85%,transparent);margin:0 17px}
+.conn-card-v2-body{padding:14px 17px 16px}
+.conn-proto-row{margin-bottom:12px}
+.conn-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.conn-stat-box{display:flex;align-items:center;gap:8px}
+.conn-stat-icon{width:26px;height:26px;border-radius:8px;background:var(--accent-d);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.conn-stat-icon.time{background:var(--purple-bg);color:var(--purple)}
+.conn-stat-text-label{font-size:8.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.conn-stat-text-val{font-size:11.5px;font-weight:700;color:var(--t1);margin-top:1px}
+.conn-duration-track{height:5px;border-radius:4px;background:var(--accent-d);overflow:hidden;position:relative}
+.conn-duration-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),#3FD79C);position:relative;overflow:hidden}
+.conn-duration-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);width:40%;animation:shimmer 1.8s linear infinite}
+@keyframes shimmer{0%{transform:translateX(-120%)}100%{transform:translateX(280%)}}
+
+.conn-empty-v2{text-align:center;padding:70px 20px;background:var(--card);border:1px dashed var(--card-b);border-radius:20px}
+.conn-empty-v2-icon{width:64px;height:64px;border-radius:18px;background:var(--accent-d);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--t3);margin:0 auto 16px}
+.conn-empty-v2-title{font-size:13.5px;font-weight:700;color:var(--t2);margin-bottom:5px}
+.conn-empty-v2-sub{font-size:11px;color:var(--t3)}
+
+@media(max-width:760px){.conn-hero{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.conn-grid-v2{grid-template-columns:1fr}}
+
+@media(max-width:560px){.srv-tiles{grid-template-columns:1fr}}
+.cl.amber i{color:var(--amber)}
+.sub-box{background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.2);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:11px}
+.sub-url{font-family:ui-monospace,monospace;font-size:10.5px;color:#A78BFA;word-break:break-all;flex:1}
+.spbar{height:4px;border-radius:3px;background:var(--accent-d);margin-top:5px;overflow:hidden}
+.spfill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1s}
+.empty{text-align:center;padding:50px 20px;color:var(--t3)}
+.empty i{font-size:40px;opacity:.3;margin-bottom:12px;display:block}
+.empty p{font-size:12.5px;margin-top:4px}
+/* ══════ گروه‌های ساب - ریدیزاین کامل ══════ */
+.subs-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.subs-search{flex:1;min-width:200px;position:relative}
+.subs-search input{width:100%;padding:11px 40px 11px 15px;border-radius:12px;border:1px solid var(--card-b);background:var(--card);color:var(--t1);font-family:inherit;font-size:12.5px;outline:none;transition:.15s}
+.subs-search input:focus{border-color:rgba(139,92,246,.5);box-shadow:0 0 0 3px rgba(139,92,246,.1)}
+.subs-search i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:15px}
+
+.sub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;margin-bottom:18px}
+.sub-card{background:var(--card);border:1px solid var(--card-b);border-radius:20px;padding:0;overflow:hidden;transition:all .25s cubic-bezier(.4,0,.2,1);position:relative}
+.sub-card:hover{border-color:var(--card-bh);transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.24)}
+.sub-card-top{background:linear-gradient(155deg,var(--purple-bg) 0%,transparent 65%);padding:20px 20px 16px;position:relative}
+.sub-card-top::before{content:'';position:absolute;top:-30px;left:-30px;width:130px;height:130px;background:radial-gradient(circle,rgba(139,92,246,.14),transparent 70%);pointer-events:none}
+.sub-card-head-v2{display:flex;align-items:flex-start;gap:13px;position:relative;z-index:1}
+.sub-card-icon{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--purple),#6D48D6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0;box-shadow:0 6px 16px rgba(139,92,246,.35)}
+.sub-card-titles{flex:1;min-width:0}
+.sub-card-name-v2{font-size:15.5px;font-weight:800;color:var(--t1);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub-card-desc-v2{font-size:11px;color:var(--t3);margin-top:3px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sub-card-lock-badge{flex-shrink:0;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px}
+.sub-card-lock-badge.locked{background:var(--amber-bg);color:var(--amber-t)}
+.sub-card-lock-badge.open{background:var(--green-bg);color:var(--green-t)}
+
+.sub-card-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative;z-index:1;margin-top:16px;background:rgba(0,0,0,.14);border:1px solid var(--card-b);border-radius:13px;overflow:hidden}
+[data-theme="light"] .sub-card-stats{background:rgba(124,58,237,.03)}
+.sub-card-stat{padding:11px 8px;text-align:center;border-left:1px solid var(--card-b)}
+.sub-card-stat:last-child{border-left:none}
+.sub-card-stat-val{font-size:15px;font-weight:800;color:var(--t1);line-height:1.2}
+.sub-card-stat-label{font-size:8.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-top:4px}
+
+.sub-card-url-row{margin:14px 20px 0;background:rgba(139,92,246,.08);border:1px dashed rgba(139,92,246,.25);border-radius:11px;padding:9px 12px;display:flex;align-items:center;gap:8px}
+.sub-card-url-text{font-family:ui-monospace,monospace;font-size:9.5px;color:#A78BFA;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub-card-url-copy{background:none;border:none;color:var(--purple);cursor:pointer;font-size:13px;padding:3px;display:flex;flex-shrink:0;transition:.15s}
+.sub-card-url-copy:hover{color:#A78BFA;transform:scale(1.1)}
+
+.sub-card-bottom{padding:14px 20px 18px;display:flex;gap:7px;flex-wrap:wrap}
+.sub-card-bottom .btn{flex:1;justify-content:center;min-width:fit-content}
+
+.subs-empty-v2{text-align:center;padding:70px 20px;background:var(--card);border:1px dashed var(--card-b);border-radius:20px;grid-column:1/-1}
+.subs-empty-v2-icon{width:64px;height:64px;border-radius:18px;background:var(--purple-bg);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--purple);margin:0 auto 16px}
+.subs-empty-v2-title{font-size:13.5px;font-weight:700;color:var(--t2);margin-bottom:5px}
+.subs-empty-v2-sub{font-size:11px;color:var(--t3)}
+
+/* ══════ مودال ساخت گروه - نسخه فشرده ══════ */
+.modal-v2{background:var(--card);border:1px solid var(--card-b);border-radius:22px;padding:0;max-width:430px;width:calc(100% - 32px);max-height:92vh;overflow-y:auto;position:relative;animation:fi .2s ease;box-shadow:0 24px 70px rgba(0,0,0,.5)}
+.modal-v2-head{background:linear-gradient(155deg,rgba(139,92,246,.14) 0%,transparent 65%);padding:18px 22px 14px;position:relative;overflow:hidden}
+.modal-v2-head::before{content:'';position:absolute;top:-50px;left:-50px;width:160px;height:160px;background:radial-gradient(circle,rgba(139,92,246,.2),transparent 70%);pointer-events:none}
+.modal-v2-close{position:absolute;top:14px;left:14px;background:var(--accent-d);border:1px solid var(--card-b);color:var(--t2);width:30px;height:30px;border-radius:9px;font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;transition:.15s}
+.modal-v2-close:hover{background:var(--red-bg);color:var(--red-t);border-color:rgba(239,68,68,.25)}
+.modal-v2-icon{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--purple),#6D48D6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;margin-bottom:10px;position:relative;z-index:1;box-shadow:0 8px 18px rgba(139,92,246,.4)}
+.modal-v2-title{font-size:15.5px;font-weight:800;color:var(--t1);position:relative;z-index:1;letter-spacing:-.01em}
+.modal-v2-sub{font-size:10.5px;color:var(--t3);margin-top:3px;position:relative;z-index:1;line-height:1.6}
+.modal-v2-body{padding:16px 22px 20px;border-top:1px solid var(--card-b)}
+.modal-v2-field{margin-bottom:11px}
+.modal-v2-field label{display:flex;align-items:center;gap:5px;font-size:9.5px;font-weight:800;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.modal-v2-field label i{color:var(--purple);font-size:13px}
+.modal-v2-input-wrap{position:relative}
+.modal-v2-input-wrap>i{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:14px;pointer-events:none;transition:.15s;z-index:1}
+.modal-v2-input{width:100%;padding:9px 38px 9px 13px;border-radius:11px;border:1px solid var(--card-b);background:rgba(0,0,0,.2);color:var(--t1);font-family:inherit;font-size:12.5px;outline:none;transition:.18s}
+[data-theme="light"] .modal-v2-input{background:rgba(124,58,237,.04)}
+.modal-v2-input::placeholder{color:var(--t3)}
+.modal-v2-input:focus{border-color:rgba(139,92,246,.55);box-shadow:0 0 0 3px rgba(139,92,246,.12);background:rgba(0,0,0,.28)}
+[data-theme="light"] .modal-v2-input:focus{background:#fff}
+.modal-v2-input:focus~i{color:var(--purple)}
+.modal-v2-hint{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.18);border-radius:11px;padding:9px 12px;font-size:10px;color:var(--t2);display:flex;gap:7px;align-items:flex-start;line-height:1.6;margin-top:2px}
+.modal-v2-hint i{font-size:14px;color:var(--accent);margin-top:1px;flex-shrink:0}
+.modal-v2-footer{display:flex;gap:8px;margin-top:15px}
+.modal-v2-btn-cancel{flex:.75;justify-content:center;padding:10px;border-radius:11px;background:transparent;border:1px solid var(--card-b);color:var(--t2);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:.15s;display:flex;align-items:center}
+.modal-v2-btn-cancel:hover{background:var(--accent-d);color:var(--t1)}
+.modal-v2-btn-submit{flex:1;justify-content:center;padding:10px;border-radius:11px;background:linear-gradient(135deg,var(--purple),#6D48D6);color:#fff;border:none;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 6px 18px rgba(139,92,246,.4);transition:.18s}
+.modal-v2-btn-submit:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(139,92,246,.5)}
+.modal-v2-btn-submit:active{transform:translateY(0) scale(.98)}
+
+/* ══════ مودال انتخاب کانفیگ - نسخه پیشرفته ══════ */
+.lmodal-head{background:linear-gradient(155deg,var(--accent-d) 0%,transparent 70%);padding:22px 24px 18px;position:relative;border-bottom:1px solid var(--card-b)}
+.lmodal-icon-row{display:flex;align-items:center;gap:12px;position:relative;z-index:1}
+.lmodal-icon{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;flex-shrink:0;box-shadow:0 6px 16px rgba(59,130,246,.35)}
+.lmodal-title-v2{font-size:14.5px;font-weight:800;color:var(--t1)}
+.lmodal-sub-v2{font-size:10.5px;color:var(--t3);margin-top:2px}
+.lmodal-search{margin-top:14px;position:relative}
+.lmodal-search input{width:100%;padding:10px 38px 10px 13px;border-radius:11px;border:1px solid var(--card-b);background:rgba(0,0,0,.2);color:var(--t1);font-family:inherit;font-size:12px;outline:none}
+[data-theme="light"] .lmodal-search input{background:#fff}
+.lmodal-search input:focus{border-color:rgba(59,130,246,.5);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.lmodal-search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:14px}
+.lmodal-quickbar{display:flex;gap:8px;margin-top:11px;position:relative;z-index:1}
+.lmodal-qbtn{font-size:10px;font-weight:700;padding:5px 11px;border-radius:8px;background:var(--accent-d);color:var(--accent2);border:1px solid var(--card-b);cursor:pointer;transition:.15s;font-family:inherit}
+.lmodal-qbtn:hover{background:rgba(59,130,246,.2)}
+.lmodal-count{margin-right:auto;font-size:10.5px;color:var(--t3);display:flex;align-items:center}
+
+.lmodal-list{padding:10px 14px;max-height:360px;overflow-y:auto}
+.lrow-v2{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:13px;cursor:pointer;transition:.15s;margin-bottom:4px;border:1px solid transparent}
+.lrow-v2:hover{background:var(--accent-d)}
+.lrow-v2.checked{background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.25)}
+.lrow-v2-check{width:20px;height:20px;border-radius:7px;border:2px solid var(--card-b);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.15s;background:rgba(0,0,0,.14)}
+.lrow-v2.checked .lrow-v2-check{background:var(--accent);border-color:var(--accent)}
+.lrow-v2-check i{font-size:12px;color:#fff;opacity:0;transform:scale(.5);transition:.15s}
+.lrow-v2.checked .lrow-v2-check i{opacity:1;transform:scale(1)}
+.lrow-v2-avatar{width:34px;height:34px;border-radius:10px;background:var(--accent-d);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.lrow-v2.checked .lrow-v2-avatar{background:var(--accent);color:#fff}
+.lrow-v2-info{flex:1;min-width:0}
+.lrow-v2-name{font-size:12.5px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lrow-v2-meta{font-size:9.5px;color:var(--t3);margin-top:2px;display:flex;align-items:center;gap:6px}
+.lrow-v2-status{font-size:9px;font-weight:800;padding:3px 9px;border-radius:20px;flex-shrink:0;white-space:nowrap}
+.lrow-v2-status.on{background:var(--green-bg);color:var(--green-t)}
+.lrow-v2-status.off{background:var(--red-bg);color:var(--red-t)}
+
+.lmodal-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 24px;border-top:1px solid var(--card-b)}
+.lmodal-footer-info{font-size:10.5px;color:var(--t3);display:flex;align-items:center;gap:6px}
+.lmodal-footer-info i{color:var(--accent)}
+.lmodal-footer-btns{display:flex;gap:8px}
+
+@media(max-width:500px){.sub-grid{grid-template-columns:1fr}.sub-card-stats{grid-template-columns:repeat(3,1fr)}}
+
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-bg.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--card-b);border-radius:20px;padding:28px 26px;max-width:520px;width:calc(100% - 32px);max-height:90vh;overflow-y:auto;position:relative;animation:fi .2s ease}
+.modal-close{position:absolute;top:14px;left:14px;background:var(--accent-d);border:1px solid var(--card-b);color:var(--t2);width:30px;height:30px;border-radius:8px;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none}
+.modal-title{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.modal-title i{color:var(--accent)}
+.lrow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(59,130,246,.05)}
+.lrow:last-child{border-bottom:none}
+.lrow-check{width:16px;height:16px;border-radius:4px;cursor:pointer;accent-color:var(--accent)}
+.lrow-label{flex:1;font-size:12px;color:var(--t1)}
+.lrow-badge{font-size:9px;padding:2px 7px;border-radius:5px;background:var(--green-bg);color:var(--green-t);font-weight:700}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--card);border:1px solid var(--card-b);color:var(--t1);border-radius:10px;padding:10px 18px;font-size:12.5px;opacity:0;transition:all .25s;z-index:999;pointer-events:none;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow);white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:rgba(16,185,129,.3);background:var(--green-bg);color:var(--green-t)}
+.toast.err{border-color:rgba(239,68,68,.3);background:var(--red-bg);color:var(--red-t)}
+.dash-footer{border-top:1px solid var(--card-b);margin-top:14px;padding-top:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.df-text{font-size:10px;color:var(--t3)}
+.df-link{font-size:11.5px;color:var(--accent2);display:flex;align-items:center;gap:5px;font-weight:600}
+
+/* ══════ کانفیگ‌ها - طراحی ردیفی حرفه‌ای ══════ */
+.cfg-grid{display:flex;flex-direction:column;gap:10px}
+.cfg-card{background:var(--card);border:1px solid var(--card-b);border-radius:14px;padding:0;transition:all .2s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.cfg-card:hover{border-color:var(--card-bh);box-shadow:0 6px 24px rgba(0,0,0,.18)}
+.cfg-card.is-off{opacity:.6}
+.cfg-card.is-exp{opacity:.78}
+.cfg-row{display:flex;align-items:center;gap:16px;padding:14px 18px}
+.cfg-status-dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 0 3px var(--green-bg)}
+.cfg-card.is-off .cfg-status-dot{background:var(--red);box-shadow:0 0 0 3px var(--red-bg)}
+.cfg-card.is-exp .cfg-status-dot{background:var(--amber);box-shadow:0 0 0 3px var(--amber-bg)}
+.cfg-identity{display:flex;flex-direction:column;gap:3px;min-width:150px;flex-shrink:0}
+.cfg-label{font-size:13.5px;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:7px}
+.cfg-sub-meta{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--t3)}
+.cfg-uuid-mini{font-family:ui-monospace,monospace;font-size:9.5px;color:var(--accent2);background:var(--accent-d);padding:2px 7px;border-radius:5px;cursor:pointer;transition:.15s}
+.cfg-uuid-mini:hover{background:rgba(59,130,246,.2)}
+.cfg-divider-v{width:1px;align-self:stretch;background:var(--card-b);flex-shrink:0}
+.cfg-usage-col{flex:1;min-width:160px;display:flex;flex-direction:column;gap:5px}
+.ubar{height:5px;border-radius:4px;background:rgba(59,130,246,0.1);overflow:hidden}
+.ubar-f{height:100%;border-radius:4px;transition:width .4s ease}
+.utxt{font-size:10px;color:var(--t3);display:flex;justify-content:space-between}
+.cfg-exp-col{flex-shrink:0;min-width:110px}
+.cfg-badges-col{display:flex;flex-direction:column;gap:5px;flex-shrink:0;align-items:flex-end}
+.cfg-actions{display:flex;gap:5px;flex-shrink:0}
+.links-toolbar{display:flex;align-items:center;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.bulk-selall{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t2);cursor:pointer;user-select:none;flex-shrink:0}
+.bulk-selall input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+.bulk-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--card);border:1px solid var(--card-b);border-radius:14px;padding:10px 16px;margin-bottom:12px}
+.bulk-count{font-size:12.5px;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:6px}
+.bulk-actions{display:flex;gap:6px;flex-wrap:wrap}
+.cfg-select{display:flex;align-items:center;flex-shrink:0}
+.cfg-select input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer}
+.proto-chip{font-size:9px;padding:3px 8px;border-radius:6px;font-weight:700;white-space:nowrap}
+.pc-ws{background:var(--accent-d);color:var(--accent2)}
+.pc-xhttp{background:var(--purple-bg);color:#A78BFA}
+.pc-ultra{background:var(--green-bg);color:var(--green-t)}
+.cfg-sub-tag{font-size:9.5px;color:var(--t3);display:flex;align-items:center;gap:4px;white-space:nowrap}
+.cfg-sub-tag i{color:var(--purple);font-size:11px}
+.tog{width:19px;height:30px;border-radius:19px;background:rgba(100,116,139,0.25);position:relative;cursor:pointer;transition:.2s;flex-shrink:0;border:none}
+.tog::after{content:'';position:absolute;width:13px;height:13px;border-radius:50%;background:#fff;left:3px;top:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.tog.on::after{top:14px}
+.tog.on{background:var(--green)}
+
+@media(max-width:880px){
+  .cfg-row{flex-wrap:wrap}
+  .cfg-divider-v{display:none}
+  .cfg-usage-col{min-width:100%;order:5}
+}
+
+/* ── زیر ۷۶۸px: تبدیل کامل به کارت موبایل ── */
+@media(max-width:768px){
+  .cfg-grid{display:grid;grid-template-columns:1fr;gap:13px}
+  .cfg-card{border-radius:16px}
+  .cfg-row{flex-direction:column;align-items:stretch;gap:12px;padding:16px}
+  .cfg-row-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .cfg-identity{min-width:0;flex:1}
+  .cfg-usage-col{min-width:0}
+  .cfg-exp-col{min-width:0}
+  .cfg-badges-col{flex-direction:row;align-items:center;flex-wrap:wrap}
+  .cfg-actions{flex-wrap:wrap;border-top:1px solid var(--card-b);padding-top:10px;margin-top:2px;width:100%}
+}
+
+/* ══════ اتصالات فعال با IP ══════ */
+.conn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.conn-card{background:var(--card);border:1px solid var(--card-b);border-radius:16px;padding:15px 17px;transition:.2s;position:relative;overflow:hidden}
+.conn-card:hover{border-color:var(--card-bh);transform:translateY(-1px)}
+.conn-card::before{content:'';position:absolute;top:0;right:0;width:3px;height:100%;background:var(--green)}
+.conn-ip-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.conn-ip-icon{width:32px;height:32px;border-radius:9px;background:var(--green-bg);color:var(--green-t);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.conn-ip{font-family:ui-monospace,monospace;font-size:13px;font-weight:700;color:var(--t1)}
+.conn-label{font-size:10.5px;color:var(--t3);margin-top:1px}
+.conn-meta{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--t3);padding-top:10px;border-top:1px solid var(--card-b)}
+
+/* ══════ لاگ فعالیت‌ها ══════ */
+.log-timeline{display:flex;flex-direction:column}
+.log-item{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid rgba(59,130,246,.05);position:relative}
+.log-item:last-child{border-bottom:none}
+.log-ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.log-ic.ok{background:var(--green-bg);color:var(--green-t)}
+.log-ic.err{background:var(--red-bg);color:var(--red-t)}
+.log-ic.warn{background:var(--amber-bg);color:var(--amber-t)}
+.log-ic.info{background:var(--accent-d);color:var(--accent2)}
+.log-body{flex:1;min-width:0}
+.log-msg{font-size:12.5px;color:var(--t1);line-height:1.6}
+.log-time{font-size:9.5px;color:var(--t3);margin-top:2px;display:flex;align-items:center;gap:5px}
+.log-kind{font-size:8.5px;padding:1px 7px;border-radius:10px;background:var(--accent-d);color:var(--accent2);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.erow{padding:9px 0;border-bottom:1px solid rgba(59,130,246,.05)}
+.erow:last-child{border-bottom:none}
+.etime{color:var(--t3);font-size:9.5px;margin-bottom:3px;display:flex;align-items:center;gap:4px}
+.emsg{color:var(--red-t);font-family:ui-monospace,monospace;background:var(--red-bg);padding:6px 9px;border-radius:6px;word-break:break-all;font-size:10.5px}
+
+@media(max-width:1050px){
+  .sidebar{transform:translateX(100%)}
+  .sidebar.open{transform:translateX(0);box-shadow:-10px 0 40px rgba(0,0,0,.4)}
+  .sb-close{display:flex}
+  .main{margin-right:0;padding-top:70px}
+  .mob-top{display:flex}
+  .metrics{grid-template-columns:1fr 1fr}
+  .g2,.g3{grid-template-columns:1fr}
+}
+@media(max-width:500px){
+  .metrics{grid-template-columns:1fr}
+  .main{padding:62px 12px 50px}
+  .sub-grid,.cfg-grid,.conn-grid{grid-template-columns:1fr}
+}
+.cfgdash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.cfgdash-item{background:var(--card);border:1px solid var(--card-b);border-radius:14px;padding:13px 14px;cursor:pointer;transition:.15s}
+.cfgdash-item:hover{border-color:var(--card-bh)}
+.cfgdash-item.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.cfgdash-item-top{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.cfgdash-item-label{font-size:12.5px;font-weight:700;color:var(--t1);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cfgdash-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.cfgdash-stat{background:var(--accent-d);border:1px solid var(--card-b);border-radius:12px;padding:12px 13px}
+.cfgdash-stat-l{font-size:9px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.cfgdash-stat-v{font-size:16px;font-weight:800;color:var(--t1)}
+.cfgdash-ip-row{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;background:var(--accent-d);border:1px solid var(--card-b);margin-bottom:6px;flex-wrap:wrap}
+.cfgdash-ip-row .ip{font-family:ui-monospace,monospace;font-size:12px;color:var(--t1);display:flex;align-items:center;gap:7px}
+.cfgdash-ip-meta{display:flex;align-items:center;gap:12px;font-size:10.5px;color:var(--t3);margin-right:auto;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="modal-bg" id="modal-edit-link">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-edit-link')"><i class="ti ti-x"></i></button>
+    <div class="modal-title"><i class="ti ti-edit"></i> ویرایش کانفیگ</div>
+    <input type="hidden" id="el-uuid">
+    <div class="fg" style="margin-bottom:13px"><label>عنوان</label><input class="fi" id="el-label" style="width:100%"></div>
+    <div class="form-row" style="margin-bottom:13px">
+      <div class="fg" style="flex:1"><label>سهمیه (0 = نامحدود)</label><input class="fi" id="el-val" type="number" min="0" step="0.1" style="width:100%"></div>
+      <div class="fg"><label>واحد</label><select class="fs" id="el-unit"><option value="GB">GB</option><option value="MB">MB</option></select></div>
+    </div>
+    <div class="fg" style="margin-bottom:13px"><label>انقضا (روز از الان، 0 = بدون تغییر/نامحدود)</label><input class="fi" id="el-exp" type="number" min="0" step="1" style="width:100%"></div>
+    <div class="fg" style="margin-bottom:13px"><label>یادداشت</label><input class="fi" id="el-note" style="width:100%"></div>
+    <div class="form-row" style="margin-bottom:13px">
+      <div class="fg" style="flex:1"><label>Fingerprint (uTLS)</label>
+        <select class="fs" id="el-fp" style="width:100%">
+          <option value="chrome">chrome</option>
+          <option value="firefox">firefox</option>
+          <option value="safari">safari</option>
+          <option value="ios">ios</option>
+          <option value="android">android</option>
+          <option value="edge">edge</option>
+          <option value="360">360</option>
+          <option value="qq">qq</option>
+          <option value="random">random</option>
+          <option value="randomized">randomized</option>
+        </select>
+      </div>
+      <div class="fg" style="flex:1"><label>ALPN (خالی = پیش‌فرض)</label><input class="fi" id="el-alpn" placeholder="مثلاً: h2,http/1.1" style="width:100%"></div>
+    </div>
+    <div class="form-row" style="margin-bottom:16px">
+      <div class="fg" style="flex:1"><label>پورت اتصال</label><input class="fi" id="el-port" type="number" min="1" max="65535" style="width:100%"></div>
+      <div class="fg" style="flex:1"><label>محدودیت آی‌پی (0 = نامحدود)</label><input class="fi" id="el-iplimit" type="number" min="0" step="1" style="width:100%"></div>
+    </div>
+    <div class="form-row" style="margin-bottom:16px">
+      <div class="fg" style="flex:1"><label>محدودیت سرعت (0 = نامحدود)</label><input class="fi" id="el-speed" type="number" min="0" step="0.5" style="width:100%"></div>
+      <div class="fg"><label>واحد</label><select class="fs" id="el-speed-unit"><option value="MBIT">Mbps</option><option value="KB">KB/s</option><option value="MB">MB/s</option></select></div>
+    </div>
+    <div class="cl"><i class="ti ti-info-circle"></i><span>برای حفظ انقضای فعلی، فیلد انقضا را صفر بگذارید.</span></div>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-o" onclick="closeModal('modal-edit-link')">انصراف</button>
+      <button class="btn btn-p" onclick="saveEditLink()"><i class="ti ti-check"></i> ذخیره تغییرات</button>
+    </div>
+  </div>
+</div>
+<div class="modal-bg" id="modal-link-chart">
+  <div class="modal" style="max-width:640px">
+    <button class="modal-close" onclick="closeModal('modal-link-chart')"><i class="ti ti-x"></i></button>
+    <div class="modal-title" id="lc-title"><i class="ti ti-chart-line"></i> نمودار مصرف</div>
+    <div style="height:280px;margin-top:10px"><canvas id="lc-canvas"></canvas></div>
+  </div>
+</div>
+<div class="mob-top">
+  <div class="ml">
+    <div class="mob-logo"><img src="data:image/png;base64,__LOGO_B64__" alt="M5G"></div>
+    <span class="mob-title">M5G</span>
+  </div>
+  <div class="mob-right">
+    <button class="theme-mob" id="theme-mob-btn" onclick="toggleTheme()"><i class="ti ti-sun" id="theme-mob-icon"></i></button>
+    <button class="menu-btn" id="open-sb"><i class="ti ti-menu-2"></i></button>
+  </div>
+</div>
+<div class="overlay" id="overlay"></div>
+<aside class="sidebar" id="sb">
+  <button class="sb-close" id="close-sb"><i class="ti ti-x"></i></button>
+  <div class="logo">
+    <div class="logo-img"><img src="data:image/png;base64,__LOGO_B64__" alt="M5G"></div>
+    <div><div class="logo-name">M5G</div><div class="logo-sub">v9.8</div></div>
+  </div>
+  <div class="nav-wrap">
+    <div class="nav-sec">پنل</div>
+    <div class="nav-it on" data-pg="overview"><i class="ti ti-layout-dashboard"></i> داشبورد</div>
+    <div class="nav-it" data-pg="links"><i class="ti ti-link-plus"></i> کانفیگ‌ها <span class="nav-badge" id="links-nb">0</span></div>
+    <div class="nav-it" data-pg="cfgdash"><i class="ti ti-chart-infographic"></i> داشبورد کانفیگ‌ها</div>
+    <div class="nav-it" data-pg="traffic"><i class="ti ti-chart-area"></i> ترافیک</div>
+    <div class="nav-it" data-pg="connections"><i class="ti ti-plug-connected"></i> اتصالات <span class="nav-badge" id="conns-nb">0</span></div>
+    <div class="nav-sec">سیستم</div>
+    <div class="nav-it" data-pg="security"><i class="ti ti-shield-lock"></i> امنیت</div>
+    <div class="nav-it" data-pg="logs"><i class="ti ti-history"></i> لاگ فعالیت‌ها</div>
+    <div class="nav-it" data-pg="errors"><i class="ti ti-alert-triangle"></i> خطاها</div>
+    <div class="nav-it" data-pg="testws"><i class="ti ti-wifi"></i> تست WebSocket</div>
+    <div class="nav-it" data-pg="settings"><i class="ti ti-settings"></i> تنظیمات</div>
+    <div class="nav-it" data-pg="support"><i class="ti ti-headset"></i> پشتیبانی</div>
+  </div>
+  <div class="sb-foot">
+    <button class="theme-btn" onclick="toggleTheme()"><i class="ti ti-moon" id="theme-icon"></i> <span id="theme-label">تم روشن</span></button>
+    
+    <button class="logout-btn" id="logout-btn"><i class="ti ti-logout"></i> خروج</button>
+  </div>
+</aside>
+<main class="main">
+<section class="pg on" id="pg-overview">
+  <div class="topbar">
+    <div><div class="tb-title"><i class="ti ti-layout-dashboard"></i> داشبورد</div><div class="tb-sub" id="last-upd">در حال بارگذاری...</div></div>
+    <div class="tb-right">
+      <span class="badge bg-green"><span class="dot dg pulse"></span> فعال</span>
+      <span class="badge bg-blue" id="uptime-badge">—</span>
+      <button class="btn btn-p btn-sm" onclick="refreshAll()"><i class="ti ti-refresh"></i> رفرش</button>
+    </div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="m-icon"><i class="ti ti-plug-connected"></i></div><div class="m-label">اتصالات فعال</div><div class="m-val" id="m-conns">—</div><div class="m-sub"><span class="dot dg pulse"></span> WebSocket / XHTTP زنده</div></div>
+    <div class="metric"><div class="m-icon"><i class="ti ti-transfer"></i></div><div class="m-label">کل ترافیک</div><div class="m-val" id="m-traffic">—<span class="m-unit">MB</span></div><div class="m-sub">از راه‌اندازی</div></div>
+    <div class="metric suc"><div class="m-icon suc"><i class="ti ti-link"></i></div><div class="m-label">کانفیگ فعال</div><div class="m-val" id="m-alinks">—</div><div class="m-sub" id="m-lsub">از کل</div></div>
+    <div class="metric dan" style="cursor:pointer" onclick="navTo('errors')" title="مشاهده جزئیات خطاها"><div class="m-icon dan"><i class="ti ti-alert-triangle"></i></div><div class="m-label">خطاها</div><div class="m-val" id="m-errs">—</div><div class="m-sub">از راه‌اندازی</div></div>
+  </div>
+  <div class="g3">
+    <div class="card"><div class="card-title"><i class="ti ti-chart-area"></i> ترافیک ساعتی (MB)</div><div class="ch"><canvas id="ch1"></canvas></div></div>
+    <div class="card"><div class="card-title"><i class="ti ti-chart-donut"></i> توزیع</div><div class="ch-sm"><canvas id="ch2"></canvas></div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-activity"></i> وضعیت سرویس</div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-shield-check"></i> UUID Auth</span><span class="sr-v" style="color:var(--green-t)">● فعال · سخت‌گیرانه</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-circle-check"></i> VLESS / WS Tunnel</span><span class="sr-v" style="color:var(--green-t)">● فعال</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-bolt"></i> Siz10a XHTTP Ultra</span><span class="sr-v" style="color:var(--green-t)">● فعال · mode: auto</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-rss"></i> Subscription API</span><span class="sr-v" style="color:var(--green-t)">● فعال</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-clock"></i> آپتایم</span><span class="sr-v" id="uptime-inline">—</span></div>
+      <div class="sr" style="flex-direction:column;align-items:flex-start;gap:4px">
+        <div style="width:100%;display:flex;justify-content:space-between"><span class="sr-k"><i class="ti ti-gauge"></i> بار نسبی</span><span class="sr-v" id="bw-pct">—%</span></div>
+        <div class="spbar" style="width:100%"><div class="spfill" id="bw-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-list"></i> خلاصه کانفیگ‌ها <span class="ml-auto badge bg-blue" id="lsummary-badge">۰</span></div>
+      <div id="lsummary">—</div>
+    </div>
+  </div>
+  <div class="dash-footer">
+    <span class="df-text">M5G v9.8 · Railway</span>
+    <a class="df-link" href="https://t.me/M5GHUB" target="_blank"><i class="ti ti-brand-telegram"></i> t.me/M5GHUB</a>
+    
+  </div>
+</section>
+<section class="pg" id="pg-links">
+  <div class="topbar">
+    <div><div class="tb-title"><i class="ti ti-link-plus"></i> کانفیگ‌ها</div><div class="tb-sub">ساخت و مدیریت کانفیگ با سهمیه و انقضا</div></div>
+    <div class="tb-right"><span class="badge bg-blue" id="links-pg-cnt">۰ کانفیگ</span></div>
+  </div>
+  <div class="create-panel">
+    <div class="cp-head">
+      <div class="cp-head-icon"><i class="ti ti-square-rounded-plus"></i></div>
+      <div class="cp-head-text">
+        <div class="cp-head-title">ساخت کانفیگ جدید</div>
+        <div class="cp-head-sub">UUID تصادفی · سهمیه، انقضا و پروتکل رو انتخاب کن</div>
+      </div>
+    </div>
+    <div class="cp-body">
+      <div class="cp-row">
+        <div class="cp-block">
+          <div class="cp-block-label"><i class="ti ti-id-badge-2"></i> شناسه کانفیگ</div>
+          <input class="cp-input-full" id="nl-label" placeholder="مثلاً: کاربر علی">
+          <div class="cp-mini-row">
+            <input class="cp-input-full" id="nl-note" placeholder="یادداشت (اختیاری)">
+          </div>
+        </div>
+        <div class="cp-block">
+          <div class="cp-block-label"><i class="ti ti-calendar-due"></i> انقضا</div>
+          <div class="cp-mini-row">
+            <input class="cp-input-full" id="nl-exp" type="number" min="0" step="1" placeholder="انقضا (روز) · 0 = نامحدود">
+          </div>
+          <div class="chip-row" id="exp-chips">
+            <span class="chip" onclick="setExpiry(0,this)">نامحدود</span>
+            <span class="chip" onclick="setExpiry(7,this)">۷ روز</span>
+            <span class="chip active" onclick="setExpiry(30,this)">۳۰ روز</span>
+            <span class="chip" onclick="setExpiry(90,this)">۹۰ روز</span>
+          </div>
+        </div>
+      </div>
+      <div class="cp-block mb16">
+        <div class="cp-block-label"><i class="ti ti-gauge"></i> سهمیه ترافیک</div>
+        <div class="cp-quota-inputs">
+          <input class="cp-input-full" id="nl-val" type="number" min="0" step="0.1" placeholder="0 = نامحدود">
+          <select class="cp-input-full fs" id="nl-unit"><option value="GB">GB</option><option value="MB" selected>MB</option></select>
+        </div>
+        <div class="chip-row" id="quota-chips">
+          <span class="chip" onclick="setQuota(0,'GB',this)">نامحدود</span>
+          <span class="chip" onclick="setQuota(500,'MB',this)">۵۰۰ MB</span>
+          <span class="chip active" onclick="setQuota(1,'GB',this)">۱ GB</span>
+          <span class="chip" onclick="setQuota(5,'GB',this)">۵ GB</span>
+          <span class="chip" onclick="setQuota(10,'GB',this)">۱۰ GB</span>
+          <span class="chip" onclick="setQuota(50,'GB',this)">۵۰ GB</span>
+        </div>
+      </div>
+      <div class="cp-block mb16">
+        <div class="cp-block-label"><i class="ti ti-plug-connected"></i> پروتکل انتقال</div>
+        <select id="nl-proto" style="display:none">
+          <option value="vless-ws">VLESS / WebSocket</option>
+          <option value="xhttp">XHTTP Ultra · mode: auto</option>
+        </select>
+        <div class="proto-cards" style="grid-template-columns:repeat(2,1fr)">
+          <div class="proto-card active" data-val="vless-ws" onclick="selectProto('vless-ws',this)">
+            <div class="proto-card-check"><i class="ti ti-check"></i></div>
+            <div class="proto-card-icon"><i class="ti ti-link"></i></div>
+            <div class="proto-card-title">VLESS / WS</div>
+            <div class="proto-card-desc">پایدار و همه‌منظوره</div>
+          </div>
+          <div class="proto-card" data-val="xhttp" onclick="selectProto('xhttp',this)">
+            <div class="proto-card-check"><i class="ti ti-check"></i></div>
+            <div class="proto-card-icon"><i class="ti ti-bolt"></i></div>
+            <div class="proto-card-title">XHTTP · mode: auto</div>
+            <div class="proto-card-desc">انتخاب خودکار packet-up/stream-up</div>
+          </div>
+        </div>
+      </div>
+      <div class="cp-row">
+        <div class="cp-block">
+          <div class="cp-block-label"><i class="ti ti-fingerprint"></i> Fingerprint (uTLS)</div>
+          <select class="cp-input-full fs" id="nl-fp">
+            <option value="chrome" selected>chrome</option>
+            <option value="firefox">firefox</option>
+            <option value="safari">safari</option>
+            <option value="ios">ios</option>
+            <option value="android">android</option>
+            <option value="edge">edge</option>
+            <option value="360">360</option>
+            <option value="qq">qq</option>
+            <option value="random">random</option>
+            <option value="randomized">randomized</option>
+          </select>
+        </div>
+        <div class="cp-block">
+          <div class="cp-block-label"><i class="ti ti-antenna-bars-5"></i> ALPN</div>
+          <select class="cp-input-full fs" id="nl-alpn-preset" onchange="onAlpnPresetChange()">
+            <option value="">پیش‌فرض پروتکل</option>
+            <option value="h2,http/1.1">h2,http/1.1</option>
+            <option value="http/1.1">http/1.1</option>
+            <option value="h2">h2</option>
+            <option value="__custom__">دستی...</option>
+          </select>
+          <div class="cp-mini-row">
+            <input class="cp-input-full" id="nl-alpn" placeholder="مقدار دستی ALPN" style="display:none">
+          </div>
+        </div>
+      </div>
+      <div class="cp-row mb16" style="grid-template-columns:1fr">
+        <div class="cp-block">
+          <div class="cp-block-label"><i class="ti ti-users"></i> محدودیت آی‌پی / کاربر هم‌زمان</div>
+          <input class="cp-input-full" id="nl-iplimit" type="number" min="0" step="1" placeholder="0 = نامحدود" value="0">
+          <div class="chip-row" id="iplimit-chips">
+            <span class="chip active" onclick="setIpLimit(0,this)">نامحدود</span>
+            <span class="chip" onclick="setIpLimit(1,this)">۱ کاربر</span>
+            <span class="chip" onclick="setIpLimit(2,this)">۲ کاربر</span>
+            <span class="chip" onclick="setIpLimit(5,this)">۵ کاربر</span>
+          </div>
+        </div>
+      </div>
+      <div class="cp-row mb16">
+        <div class="cp-block" style="flex:1">
+          <div class="cp-block-label"><i class="ti ti-gauge"></i> محدودیت سرعت</div>
+          <div class="form-row">
+            <input class="cp-input-full" id="nl-speed" type="number" min="0" step="0.5" placeholder="0 = نامحدود" value="0" style="flex:1">
+            <select class="fs" id="nl-speed-unit" style="flex:0 0 100px">
+              <option value="MBIT" selected>Mbps</option>
+              <option value="KB">KB/s</option>
+              <option value="MB">MB/s</option>
+            </select>
+          </div>
+          <div class="chip-row" id="speed-chips">
+            <span class="chip active" onclick="setSpeedLimit(0,this)">نامحدود</span>
+            <span class="chip" onclick="setSpeedLimit(1,this)">۱ Mbps</span>
+            <span class="chip" onclick="setSpeedLimit(5,this)">۵ Mbps</span>
+            <span class="chip" onclick="setSpeedLimit(10,this)">۱۰ Mbps</span>
+            <span class="chip" onclick="setSpeedLimit(25,this)">۲۵ Mbps</span>
+          </div>
+        </div>
+      </div>
+      <div class="cp-footer">
+        <div class="cp-footer-note"><i class="ti ti-info-circle"></i> UUID کاملاً رندوم تولید می‌شود · فقط UUID‌های ثبت‌شده اجازه اتصال دارند · پروتکل پس از ساخت قابل تغییر نیست.</div>
+        <button class="cp-submit-btn" onclick="createLink()"><i class="ti ti-link-plus"></i> ساخت کانفیگ</button>
+      </div>
+    </div>
+  </div>
+  <div class="links-toolbar">
+    <div class="subs-search">
+      <i class="ti ti-search"></i>
+      <input id="links-search" placeholder="جستجو بر اساس نام، یادداشت یا UUID..." oninput="renderLinksGrid()">
+    </div>
+    <select id="links-sort" class="fs" style="min-width:180px" onchange="renderLinksGrid()">
+      <option value="newest">مرتب‌سازی: جدیدترین</option>
+      <option value="name">نام (الفبا)</option>
+      <option value="usage_desc">بیشترین مصرف</option>
+      <option value="usage_asc">کمترین مصرف</option>
+      <option value="remaining_asc">کمترین حجم باقی‌مانده</option>
+      <option value="active_first">فعال‌ها اول</option>
+    </select>
+    <label class="bulk-selall">
+      <input type="checkbox" id="links-selall" onchange="toggleSelectAllLinks(this)">
+      <span>انتخاب همه</span>
+    </label>
+  </div>
+  <div class="bulk-bar" id="links-bulkbar" style="display:none">
+    <span class="bulk-count"><i class="ti ti-checkbox"></i> <span id="links-selcount">۰</span> کانفیگ انتخاب شده</span>
+    <div class="bulk-actions">
+      <button class="btn btn-sm btn-g" onclick="bulkLinksAction('activate')"><i class="ti ti-circle-check"></i> فعال‌سازی</button>
+      <button class="btn btn-sm btn-g" onclick="bulkLinksAction('deactivate')"><i class="ti ti-circle-x"></i> غیرفعال‌سازی</button>
+      <button class="btn btn-sm btn-g" onclick="bulkLinksAction('reset')"><i class="ti ti-rotate"></i> ریست مصرف</button>
+      <button class="btn btn-sm btn-d" onclick="bulkLinksAction('delete')"><i class="ti ti-trash"></i> حذف</button>
+      <button class="btn btn-sm btn-o" onclick="clearLinksSelection()"><i class="ti ti-x"></i> لغو انتخاب</button>
+    </div>
+  </div>
+  <div class="cfg-grid" id="links-grid"></div>
+  <div class="empty" id="links-empty" style="display:none"><i class="ti ti-link-off"></i><p>هنوز کانفیگی وجود ندارد</p></div>
+  <div class="empty" id="links-empty-search" style="display:none"><i class="ti ti-search-off"></i><p>موردی با این جستجو پیدا نشد</p></div>
+</section>
+<section class="pg" id="pg-cfgdash">
+  <div class="topbar">
+    <div><div class="tb-title"><i class="ti ti-chart-infographic"></i> داشبورد کانفیگ‌ها</div><div class="tb-sub">آنالیز اختصاصی هر کانفیگ — وضعیت، مصرف و آی‌پی‌های متصل</div></div>
+    <div class="tb-right"><button class="btn btn-p btn-sm" onclick="loadCfgDash()"><i class="ti ti-refresh"></i> رفرش</button></div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title"><i class="ti ti-list"></i> انتخاب کانفیگ <span class="ml-auto badge bg-blue" id="cfgdash-count">۰</span></div>
+    <div class="cfgdash-grid" id="cfgdash-list"></div>
+    <div class="empty" id="cfgdash-empty" style="display:none"><i class="ti ti-link-off"></i><p>هنوز کانفیگی وجود ندارد</p></div>
+  </div>
+  <div id="cfgdash-detail">
+    <div class="card"><div class="empty"><i class="ti ti-hand-click"></i><p>یک کانفیگ را از لیست بالا انتخاب کنید تا آنالیز کامل آن نمایش داده شود</p></div></div>
+  </div>
+</section>
+<section class="pg" id="pg-traffic">
+  <div class="topbar">
+    <div><div class="tb-title"><i class="ti ti-chart-area"></i> ترافیک</div><div class="tb-sub">تحلیل و مانیتورینگ مصرف پهنای باند</div></div>
+    <div class="tb-right"><button class="btn btn-p btn-sm" onclick="refreshAll()"><i class="ti ti-refresh"></i> رفرش</button></div>
+  </div>
+
+  <div class="traf-hero">
+    <div class="traf-main-stat">
+      <div class="traf-main-label"><i class="ti ti-database"></i> کل ترافیک مصرفی</div>
+      <div class="traf-main-val" id="t-traffic">—<span>MB</span></div>
+      <div class="traf-trend up" id="t-trend"><i class="ti ti-trending-up"></i> <span id="t-trend-val">—</span></div>
+    </div>
+    <div class="traf-mini">
+      <div class="traf-mini-top"><div class="traf-mini-icon"><i class="ti ti-arrow-up-right"></i></div><span class="traf-mini-label">میانگین ساعتی</span></div>
+      <div><div class="traf-mini-val" id="t-avg">—</div><div class="traf-mini-sub">MB در ساعت</div></div>
+    </div>
+    <div class="traf-mini">
+      <div class="traf-mini-top"><div class="traf-mini-icon pk"><i class="ti ti-chart-bar"></i></div><span class="traf-mini-label">پیک مصرف</span></div>
+      <div><div class="traf-mini-val" id="t-peak">—</div><div class="traf-mini-sub" id="t-peak-time">بالاترین ساعت</div></div>
+    </div>
+    <div class="traf-mini">
+      <div class="traf-mini-top"><div class="traf-mini-icon lo"><i class="ti ti-clock-hour-4"></i></div><span class="traf-mini-label">کمترین مصرف</span></div>
+      <div><div class="traf-mini-val" id="t-low">—</div><div class="traf-mini-sub">MB در ساعت</div></div>
+    </div>
+  </div>
+
+  <div class="traf-chart-card">
+    <div class="traf-chart-head">
+      <div>
+        <div class="traf-chart-title"><i class="ti ti-activity"></i> روند مصرف ترافیک</div>
+        <div class="traf-chart-sub">بر اساس مگابایت در هر ساعت</div>
+      </div>
+      <div class="traf-legend">
+        <div class="traf-legend-item"><span class="traf-legend-dot" style="background:var(--accent)"></span> مصرف</div>
+        <div class="traf-legend-item"><span class="traf-legend-dot" style="background:var(--amber)"></span> میانگین</div>
+      </div>
+    </div>
+    <div class="traf-chart-body"><canvas id="ch3"></canvas></div>
+  </div>
+</section>
+<section class="pg" id="pg-connections">
+  <div class="topbar">
+    <div><div class="tb-title"><i class="ti ti-plug-connected"></i> اتصالات فعال</div><div class="tb-sub">مانیتورینگ زنده‌ی آی‌پی و ترافیک هر اتصال</div></div>
+    <div class="tb-right"><span class="badge bg-green" id="conns-live">—</span><button class="btn btn-p btn-sm" onclick="refreshAll()"><i class="ti ti-refresh"></i> رفرش</button></div>
+  </div>
+
+  <div class="conn-hero">
+    <div class="conn-hero-tile">
+      <div class="conn-hero-icon"><i class="ti ti-plug-connected"></i></div>
+      <div class="conn-hero-label">اتصالات زنده</div>
+      <div class="conn-hero-val" id="ch-count">—</div>
+    </div>
+    <div class="conn-hero-tile">
+      <div class="conn-hero-icon"><i class="ti ti-transfer"></i></div>
+      <div class="conn-hero-label">مجموع ترافیک لحظه‌ای</div>
+      <div class="conn-hero-val" id="ch-traffic">—</div>
+    </div>
+    <div class="conn-hero-tile">
+      <div class="conn-hero-icon"><i class="ti ti-clock"></i></div>
+      <div class="conn-hero-label">میانگین مدت اتصال</div>
+      <div class="conn-hero-val" id="ch-avgdur">—</div>
+    </div>
+    <div class="conn-hero-tile">
+      <div class="conn-hero-icon"><i class="ti ti-map-pin"></i></div>
+      <div class="conn-hero-label">آی‌پی‌های یکتا</div>
+      <div class="conn-hero-val" id="ch-uniq">—</div>
+    </div>
+  </div>
+
+  <div class="conn-toolbar">
+    <div class="conn-toolbar-title"><i class="ti ti-list-details"></i> لیست اتصالات</div>
+    <div class="conn-live-badge"><span class="conn-live-dot"></span> بروزرسانی خودکار هر ۵ ثانیه</div>
+  </div>
+
+  <div class="conn-grid-v2" id="conns-grid"></div>
+  <div class="conn-empty-v2" id="conns-empty" style="display:none">
+    <div class="conn-empty-v2-icon"><i class="ti ti-plug-off"></i></div>
+    <div class="conn-empty-v2-title">هیچ اتصال فعالی نیست</div>
+    <div class="conn-empty-v2-sub">به محض اتصال کلاینت‌ها، اینجا نمایش داده می‌شوند</div>
+  </div>
+</section>
+<section class="pg" id="pg-security">
+  <div class="topbar"><div><div class="tb-title"><i class="ti ti-shield-lock"></i> امنیت</div></div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-lock"></i> رمزنگاری</div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-certificate"></i> TLS/HTTPS</span><span class="sr-v" style="color:var(--green-t)">● فعال (443)</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-fingerprint"></i> Fingerprint</span><span class="sr-v">Chrome Spoof</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-network"></i> پروتکل‌ها</span><span class="sr-v">VLESS/WS + XHTTP Ultra</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-key"></i> هش رمز</span><span class="sr-v">SHA-256+Salt</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-cookie"></i> سشن</span><span class="sr-v">HttpOnly · 7 روز</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-shield-check"></i> کنترل دسترسی</div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-id-badge"></i> UUID Auth سخت‌گیرانه</span><span class="sr-v" style="color:var(--green-t)">● فعال v9</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-toggle-right"></i> فعال/غیرفعال کانفیگ</span><span class="sr-v" style="color:var(--green-t)">● فعال</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-gauge"></i> سهمیه ترافیک</span><span class="sr-v" style="color:var(--green-t)">● فعال</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-calendar-x"></i> تاریخ انقضا</span><span class="sr-v" style="color:var(--green-t)">● فعال</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-lock"></i> رمز صفحه پابلیک ساب</span><span class="sr-v" style="color:var(--green-t)">● اختیاری · SHA-256</span></div>
+    </div>
+  </div>
+</section>
+<section class="pg" id="pg-logs">
+  <div class="topbar"><div><div class="tb-title"><i class="ti ti-history"></i> لاگ فعالیت‌ها</div><div class="tb-sub">تاریخچه‌ی کامل رخدادهای پنل</div></div><div class="tb-right"><button class="btn btn-p btn-sm" onclick="loadActivity()"><i class="ti ti-refresh"></i></button></div></div>
+  <div class="card"><div class="log-timeline" id="logs-list">—</div><div class="empty" id="logs-empty" style="display:none"><i class="ti ti-history-toggle"></i><p>هنوز لاگی ثبت نشده</p></div></div>
+</section>
+<section class="pg" id="pg-errors">
+  <div class="topbar"><div><div class="tb-title"><i class="ti ti-alert-triangle"></i> خطاها</div></div><div class="tb-right"><span class="badge bg-red" id="errs-badge">۰</span><button class="btn btn-p btn-sm" onclick="refreshAll()"><i class="ti ti-refresh"></i></button></div></div>
+  <div class="card"><div class="card-title"><i class="ti ti-bug"></i> لاگ خطاها</div><div id="errs-full">—</div></div>
+</section>
+<section class="pg" id="pg-testws">
+  <div class="topbar"><div><div class="tb-title"><i class="ti ti-wifi"></i> تست WebSocket</div></div></div>
+  <div class="card" style="max-width:660px">
+    <div class="cl amber" style="margin-top:0;margin-bottom:12px"><i class="ti ti-alert-triangle"></i><span>فقط UUID‌های ثبت‌شده و فعال اتصال برقرار می‌کنند (این فقط تست VLESS/WS است؛ تست XHTTP از خود کلاینت انجام می‌شود).</span></div>
+    <div class="form-row" style="margin-bottom:12px">
+      <div class="fg" style="flex:1"><label>UUID (باید در کانفیگ‌ها وجود داشته باشد)</label><input class="fi" id="ws-uuid" placeholder="UUID یک کانفیگ فعال" style="width:100%"></div>
+      <button class="btn btn-p" onclick="wsConn()"><i class="ti ti-plug-connected"></i> اتصال</button>
+      <button class="btn btn-d" onclick="wsDisc()"><i class="ti ti-plug-x"></i> قطع</button>
+    </div>
+    <div class="form-row" style="margin-bottom:12px">
+      <input class="fi" id="ws-msg" placeholder="پیام تست..." style="flex:1">
+      <button class="btn btn-o" onclick="wsSend()"><i class="ti ti-send"></i> ارسال</button>
+    </div>
+    <div style="background:rgba(0,0,0,.3);border:1px solid var(--card-b);border-radius:10px;padding:14px;height:250px;overflow-y:auto;font-family:ui-monospace,monospace;font-size:10.5px;line-height:1.9" id="ws-log">
+      <p style="color:var(--t3)">منتظر اتصال...</p>
+    </div>
+  </div>
+</section>
+<section class="pg" id="pg-settings">
+  <div class="topbar"><div><div class="tb-title"><i class="ti ti-settings"></i> تنظیمات</div></div></div>
+  <div class="g2">
+    <div class="srv-panel">
+      <div class="srv-hero">
+        <div class="srv-hero-icon"><i class="ti ti-server-2"></i></div>
+        <div class="srv-hero-text">
+          <div class="srv-hero-domain" id="set-host">—</div>
+          <div class="srv-hero-sub"><span class="dot dg pulse"></span> آنلاین · Railway</div>
+        </div>
+      </div>
+      <div class="srv-tiles">
+        <div class="srv-tile"><div class="srv-tile-icon"><i class="ti ti-route"></i></div><div class="srv-tile-text"><div class="srv-tile-label">پورت پیش‌فرض</div><div class="srv-tile-val">443 (TLS) · قابل تغییر در هر کانفیگ</div></div></div>
+        <div class="srv-tile"><div class="srv-tile-icon"><i class="ti ti-versions"></i></div><div class="srv-tile-text"><div class="srv-tile-label">نسخه</div><div class="srv-tile-val">v9.8</div></div></div>
+        <div class="srv-tile"><div class="srv-tile-icon"><i class="ti ti-brand-fastapi"></i></div><div class="srv-tile-text"><div class="srv-tile-label">فریم‌ورک</div><div class="srv-tile-val">FastAPI + Uvicorn</div></div></div>
+        <div class="srv-tile"><div class="srv-tile-icon"><i class="ti ti-cloud"></i></div><div class="srv-tile-text"><div class="srv-tile-label">پلتفرم</div><div class="srv-tile-val">Railway</div></div></div>
+        <div class="srv-tile" style="grid-column:1/-1"><div class="srv-tile-icon"><i class="ti ti-device-floppy"></i></div><div class="srv-tile-text"><div class="srv-tile-label">ذخیره‌سازی</div><div class="srv-tile-val">JSON File (/data)</div></div></div>
+      </div>
+    </div>
+    <div class="pw-panel">
+      <div class="pw-hero">
+        <div class="pw-hero-icon"><i class="ti ti-key"></i></div>
+        <div class="pw-hero-text">
+          <div class="pw-hero-title">تغییر رمز عبور</div>
+          <div class="pw-hero-sub">رمز قوی انتخاب کنید و آن را جایی امن نگه دارید</div>
+        </div>
+      </div>
+      <div class="pw-body">
+        <div class="pw-field">
+          <label>رمز فعلی</label>
+          <input class="pw-input" type="password" id="cp-cur" placeholder="رمز فعلی را وارد کنید">
+          <button class="pw-eye" type="button" onclick="togglePwField('cp-cur',this)"><i class="ti ti-eye"></i></button>
+        </div>
+        <div class="pw-field" style="margin-bottom:6px">
+          <label>رمز جدید</label>
+          <input class="pw-input" type="password" id="cp-new" placeholder="حداقل ۴ کاراکتر" oninput="checkPwStrength(this.value)">
+          <button class="pw-eye" type="button" onclick="togglePwField('cp-new',this)"><i class="ti ti-eye"></i></button>
+        </div>
+        <div class="pw-strength" id="pw-strength-bar">
+          <div class="pw-strength-seg"></div><div class="pw-strength-seg"></div><div class="pw-strength-seg"></div><div class="pw-strength-seg"></div>
+        </div>
+        <div class="pw-strength-label" id="pw-strength-label"><i class="ti ti-shield"></i> قدرت رمز</div>
+        <div class="pw-reqs">
+          <span class="pw-req" id="req-len"><i class="ti ti-circle-dashed"></i> حداقل ۴ کاراکتر</span>
+          <span class="pw-req" id="req-num"><i class="ti ti-circle-dashed"></i> شامل عدد</span>
+          <span class="pw-req" id="req-case"><i class="ti ti-circle-dashed"></i> حروف بزرگ/کوچک</span>
+        </div>
+        <div class="pw-field" style="margin-bottom:18px">
+          <label>تکرار رمز جدید</label>
+          <input class="pw-input" type="password" id="cp-cf" placeholder="تکرار رمز جدید">
+          <button class="pw-eye" type="button" onclick="togglePwField('cp-cf',this)"><i class="ti ti-eye"></i></button>
+        </div>
+        <button class="pw-submit" onclick="changePw()"><i class="ti ti-shield-check"></i> ذخیره رمز جدید</button>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="pg" id="pg-support">
+  <div class="topbar"><div><div class="tb-title"><i class="ti ti-headset"></i> پشتیبانی</div></div></div>
+  <div class="srv-panel">
+    <div class="srv-hero">
+      <div class="srv-hero-icon"><i class="ti ti-headset"></i></div>
+      <div class="srv-hero-text">
+        <div class="srv-hero-domain">پشتیبانی M5G</div>
+        <div class="srv-hero-sub"><span class="dot dg pulse"></span> راه‌های ارتباطی با تیم M5G</div>
+      </div>
+    </div>
+    <div class="srv-tiles">
+      <a class="srv-tile" href="https://www.youtube.com/@M5GHUB" target="_blank" style="text-decoration:none;cursor:pointer">
+        <div class="srv-tile-icon"><i class="ti ti-brand-youtube"></i></div>
+        <div class="srv-tile-text"><div class="srv-tile-label">یوتیوب</div><div class="srv-tile-val">youtube.com/@M5GHUB</div></div>
+      </a>
+      <a class="srv-tile" href="https://t.me/M5G_GROUP" target="_blank" style="text-decoration:none;cursor:pointer">
+        <div class="srv-tile-icon"><i class="ti ti-users-group"></i></div>
+        <div class="srv-tile-text"><div class="srv-tile-label">گروه تلگرام</div><div class="srv-tile-val">t.me/M5G_GROUP</div></div>
+      </a>
+      <a class="srv-tile" href="https://t.me/M5GHUB" target="_blank" style="text-decoration:none;cursor:pointer">
+        <div class="srv-tile-icon"><i class="ti ti-speakerphone"></i></div>
+        <div class="srv-tile-text"><div class="srv-tile-label">کانال تلگرام</div><div class="srv-tile-val">t.me/M5GHUB</div></div>
+      </a>
+      <a class="srv-tile" href="https://github.com/M5GHUBX" target="_blank" style="text-decoration:none;cursor:pointer">
+        <div class="srv-tile-icon"><i class="ti ti-brand-github"></i></div>
+        <div class="srv-tile-text"><div class="srv-tile-label">گیت‌هاب</div><div class="srv-tile-val">github.com/M5GHUBX</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+</main>
+<script>
+let isDark=localStorage.getItem('M5G-theme')!=='light';
+function applyTheme(dark){
+  document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+  const icon=dark?'ti-sun':'ti-moon',label=dark?'تم روشن':'تم تاریک';
+  document.getElementById('theme-icon').className='ti '+icon;
+  document.getElementById('theme-label').textContent=label;
+  const mobI=document.getElementById('theme-mob-icon');if(mobI)mobI.className='ti '+icon;
+}
+function toggleTheme(){isDark=!isDark;localStorage.setItem('M5G-theme',isDark?'dark':'light');applyTheme(isDark)}
+applyTheme(isDark);
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show'+(type?' '+type:'');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+function fmtB(b){if(!b||b===0)return '0 B';if(b<1024)return b+' B';if(b<1024**2)return (b/1024).toFixed(1)+' KB';if(b<1024**3)return (b/1024**2).toFixed(2)+' MB';return (b/1024**3).toFixed(2)+' GB'}
+function toFa(n){return String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d])}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function daysLeft(exp){if(!exp)return null;return Math.ceil((new Date(exp)-Date.now())/(864e5))}
+function expChip(exp,expired){
+  if(expired)return '<span class="exp-chip ec-exp"><i class="ti ti-calendar-x"></i> منقضی</span>';
+  if(!exp)return '<span class="exp-chip ec-inf"><i class="ti ti-infinity"></i> نامحدود</span>';
+  const d=daysLeft(exp);
+  if(d<=0)return '<span class="exp-chip ec-exp"><i class="ti ti-calendar-x"></i> منقضی</span>';
+  if(d<=3)return `<span class="exp-chip ec-warn"><i class="ti ti-alert-triangle"></i> ${toFa(d)} روز مانده</span>`;
+  return `<span class="exp-chip ec-ok"><i class="ti ti-calendar-check"></i> ${toFa(d)} روز مانده</span>`;
+}
+function protoBadge(p){
+  const m={'vless-ws':['VLESS · WS','pc-ws'],'xhttp':['XHTTP · auto','pc-xhttp']};
+  const v=m[p]||m['vless-ws'];
+  return `<span class="proto-chip ${v[1]}">${v[0]}</span>`;
+}
+async function checkAuth(){try{const r=await fetch('/api/me');const d=await r.json();if(!d.authenticated)location.href='/login';}catch(e){location.href='/login'}}
+async function logout(){try{await fetch('/api/logout',{method:'POST'})}catch(e){}location.href='/login'}
+document.getElementById('logout-btn').addEventListener('click',logout);
+async function authF(url,opts={}){
+  const r=await fetch(url,opts);
+  if(r.status===401){location.href='/login';throw new Error('unauthorized')}
+  return r;
+}
+function setQuota(val,unit,el){
+  document.getElementById('nl-val').value = val===0?'':val;
+  document.getElementById('nl-unit').value = unit;
+  document.querySelectorAll('#quota-chips .chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+function setExpiry(days,el){
+  document.getElementById('nl-exp').value = days===0?'':days;
+  document.querySelectorAll('#exp-chips .chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+function selectProto(val,el){
+  document.getElementById('nl-proto').value = val;
+  document.querySelectorAll('.proto-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+function setIpLimit(n,el){
+  document.getElementById('nl-iplimit').value = n;
+  document.querySelectorAll('#iplimit-chips .chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+function setSpeedLimit(n,el){
+  document.getElementById('nl-speed').value = n;
+  document.getElementById('nl-speed-unit').value = 'MBIT';
+  document.querySelectorAll('#speed-chips .chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+function onAlpnPresetChange(){
+  const p=document.getElementById('nl-alpn-preset').value;
+  const inp=document.getElementById('nl-alpn');
+  if(p==='__custom__'){inp.style.display='block';inp.value='';inp.focus();}
+  else{inp.style.display='none';inp.value=p;}
+}
+const sb=document.getElementById('sb'),overlay=document.getElementById('overlay');
+function openSb(){sb.classList.add('open');overlay.classList.add('show')}
+function closeSb(){sb.classList.remove('open');overlay.classList.remove('show')}
+document.getElementById('open-sb').addEventListener('click',openSb);
+document.getElementById('close-sb').addEventListener('click',closeSb);
+overlay.addEventListener('click',closeSb);
+function navTo(name){
+  document.querySelectorAll('.nav-it').forEach(n=>n.classList.toggle('on',n.dataset.pg===name));
+  document.querySelectorAll('.pg').forEach(p=>p.classList.toggle('on',p.id==='pg-'+name));
+  const loaders={links:loadLinks,connections:loadConns,errors:loadErrs,logs:loadActivity,cfgdash:loadCfgDash};
+  if(loaders[name])loaders[name]();
+  closeSb();window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.nav-it').forEach(el=>el.addEventListener('click',()=>navTo(el.dataset.pg)));
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+let prevTraf=0,ch1,ch2,ch3;
+async function fetchStats(){
+  try{
+    const r=await authF('/stats'),d=await r.json();
+    document.getElementById('m-conns').textContent=d.active_connections;
+    document.getElementById('conns-nb').textContent=d.active_connections;
+    document.getElementById('m-traffic').innerHTML=d.total_traffic_mb.toFixed(1)+'<span class="m-unit">MB</span>';
+    document.getElementById('m-alinks').textContent=d.active_links??'—';
+    document.getElementById('m-lsub').textContent='از '+d.links_count+' کانفیگ';
+    document.getElementById('m-errs').textContent=d.total_errors??'—';
+    document.getElementById('errs-badge').textContent=d.total_errors+' خطا';
+    document.getElementById('uptime-inline').textContent=d.uptime;
+    document.getElementById('uptime-badge').textContent='Railway · '+d.uptime;
+    document.getElementById('last-upd').textContent='آخرین بروزرسانی: '+new Date().toLocaleTimeString('fa-IR');
+    document.getElementById('conns-live').innerHTML='<span class="dot dg pulse"></span> '+d.active_connections+' اتصال';
+    document.getElementById('t-traffic').innerHTML=d.total_traffic_mb.toFixed(1)+'<span class="m-unit">MB</span>';
+    const delta=d.total_traffic_mb-prevTraf,pct=Math.min(100,Math.round((delta/50)*100));
+    document.getElementById('bw-pct').textContent=pct+'%';
+    document.getElementById('bw-bar').style.width=pct+'%';
+    prevTraf=d.total_traffic_mb;
+    if(d.hourly){
+      const labels=Object.keys(d.hourly).sort(),vals=labels.map(k=>+(d.hourly[k]/1024**2).toFixed(2));
+      [ch1,ch3].forEach(c=>{if(!c)return;c.data.labels=labels;c.data.datasets[0].data=vals;c.update()});
+      if(vals.length){const avg=vals.reduce((a,b)=>a+b,0)/vals.length,peak=Math.max(...vals);document.getElementById('t-avg').innerHTML=avg.toFixed(2)+'<span class="m-unit">MB</span>';document.getElementById('t-peak').innerHTML=peak.toFixed(2)+'<span class="m-unit">MB</span>';}
+    }
+    renderErrs(d.recent_errors||[]);
+  }catch(e){console.error(e)}
+}
+function renderErrs(errs){
+  const el=document.getElementById('errs-full');if(!el)return;
+  if(!errs.length){el.innerHTML='<div style="color:var(--green-t);padding:10px;font-size:12px;display:flex;align-items:center;gap:5px"><i class="ti ti-circle-check"></i> هیچ خطایی نیست</div>';return}
+  el.innerHTML=errs.slice().reverse().map(e=>`<div class="erow"><div class="etime"><i class="ti ti-clock"></i>${new Date(e.time).toLocaleString('fa-IR')}</div><div class="emsg">${esc(e.error)}${e.url?' — '+esc(e.url):''}</div></div>`).join('');
+}
+async function loadActivity(){
+  try{
+    const r=await authF('/api/activity'),d=await r.json();
+    const logs=(d.logs||[]).slice().reverse();
+    const el=document.getElementById('logs-list'),em=document.getElementById('logs-empty');
+    if(!logs.length){el.innerHTML='';em.style.display='block';return}
+    em.style.display='none';
+    const icMap={ok:'ti-circle-check',err:'ti-circle-x',warn:'ti-alert-triangle',info:'ti-info-circle'};
+    const kindFa={link:'کانفیگ',sub:'گروه',auth:'ورود',connection:'اتصال',system:'سیستم'};
+    el.innerHTML=logs.map(l=>`
+      <div class="log-item">
+        <div class="log-ic ${l.level}"><i class="ti ${icMap[l.level]||'ti-info-circle'}"></i></div>
+        <div class="log-body">
+          <div class="log-msg">${esc(l.message)}</div>
+          <div class="log-time"><i class="ti ti-clock"></i> ${new Date(l.time).toLocaleString('fa-IR')} <span class="log-kind">${kindFa[l.kind]||l.kind}</span></div>
+        </div>
+      </div>
+    `).join('');
+  }catch(e){console.error(e)}
+}
+let allLinksList=[];
+let selectedLinks=new Set();
+async function loadLinks(){
+  try{
+    const r=await authF('/api/links');
+    const {links=[]}=await r.json();
+    allLinksList=links;
+    const validUuids=new Set(links.map(l=>l.uuid));
+    selectedLinks.forEach(u=>{if(!validUuids.has(u))selectedLinks.delete(u)});
+    document.getElementById('links-nb').textContent=links.length;
+    document.getElementById('links-pg-cnt').textContent=toFa(links.length)+' کانفیگ';
+    document.getElementById('lsummary-badge').textContent=toFa(links.length);
+    document.getElementById('lsummary').innerHTML=links.length?links.slice(0,6).map(l=>`<div class="sr"><span class="sr-k" style="gap:5px"><i class="ti ${l.expired?'ti-calendar-x':l.active?'ti-circle-check':'ti-circle-x'}" style="color:${l.expired?'var(--amber)':l.active?'var(--green)':'var(--red)'}"></i>${esc(l.label)}</span><span class="sr-v" style="font-size:10px">${fmtB(l.used_bytes)} / ${l.limit_bytes===0?'∞':fmtB(l.limit_bytes)}</span></div>`).join(''):'<div class="empty"><i class="ti ti-link-off"></i><p>کانفیگی وجود ندارد</p></div>';
+    renderLinksGrid();
+  }catch(e){console.error(e)}
+}
+function filteredLinksList(){
+  const q=(document.getElementById('links-search')?.value||'').trim().toLowerCase();
+  let list=!q?allLinksList:allLinksList.filter(l=>
+    (l.label||'').toLowerCase().includes(q) ||
+    (l.note||'').toLowerCase().includes(q) ||
+    (l.uuid||'').toLowerCase().includes(q)
+  );
+  const sortBy=document.getElementById('links-sort')?.value||'newest';
+  const remaining=l=>l.limit_bytes===0?Infinity:Math.max(0,l.limit_bytes-l.used_bytes);
+  list=list.slice();
+  if(sortBy==='name'){
+    list.sort((a,b)=>(a.label||'').localeCompare(b.label||'','fa'));
+  }else if(sortBy==='usage_desc'){
+    list.sort((a,b)=>(b.used_bytes||0)-(a.used_bytes||0));
+  }else if(sortBy==='usage_asc'){
+    list.sort((a,b)=>(a.used_bytes||0)-(b.used_bytes||0));
+  }else if(sortBy==='remaining_asc'){
+    list.sort((a,b)=>remaining(a)-remaining(b));
+  }else if(sortBy==='active_first'){
+    list.sort((a,b)=>((b.active&&!b.expired)?1:0)-((a.active&&!a.expired)?1:0));
+  }else{
+    list.sort((a,b)=>(b.created_at||'').localeCompare(a.created_at||''));
+  }
+  return list;
+}
+function renderLinksGrid(){
+  const links=filteredLinksList();
+  const grid=document.getElementById('links-grid'),empty=document.getElementById('links-empty'),emptySearch=document.getElementById('links-empty-search');
+  if(!allLinksList.length){grid.innerHTML='';empty.style.display='block';emptySearch.style.display='none';updateBulkBar();return}
+  if(!links.length){grid.innerHTML='';empty.style.display='none';emptySearch.style.display='block';updateBulkBar();return}
+  empty.style.display='none';emptySearch.style.display='none';
+  grid.innerHTML=links.map(l=>{
+  const lim=l.limit_bytes===0?'∞':fmtB(l.limit_bytes);
+  const pct=l.limit_bytes===0?0:Math.min(100,l.used_bytes/l.limit_bytes*100);
+  const bc=pct>90?'var(--red)':pct>70?'var(--amber)':'var(--accent)';
+  const allowed=l.active&&!l.expired;
+  const cardCls=!l.active?'is-off':(l.expired?'is-exp':'');
+  const checked=selectedLinks.has(l.uuid)?'checked':'';
+  return `<div class="cfg-card ${cardCls}">
+    <div class="cfg-row">
+      <span class="cfg-select"><input type="checkbox" ${checked} onchange="toggleLinkSelect('${l.uuid}',this)" title="انتخاب"></span>
+      <span class="cfg-status-dot ${allowed?'pulse':''}"></span>
+      <div class="cfg-identity">
+        <div class="cfg-label">${esc(l.label)}</div>
+        <div class="cfg-sub-meta">
+          <span class="cfg-uuid-mini" onclick="navigator.clipboard.writeText('${l.uuid}').then(()=>toast('UUID کپی شد','ok'))" title="${l.uuid}"><i class="ti ti-fingerprint"></i> ${l.uuid.slice(0,10)}…</span>
+          <span>${new Date(l.created_at).toLocaleDateString('fa-IR')}</span>
+        </div>
+      </div>
+      <div class="cfg-divider-v"></div>
+      <div class="cfg-usage-col">
+        <div class="ubar"><div class="ubar-f" style="width:${pct}%;background:${bc}"></div></div>
+        <div class="utxt"><span>${fmtB(l.used_bytes)}</span><span>از ${lim}</span></div>
+      </div>
+      <div class="cfg-divider-v"></div>
+      <div class="cfg-exp-col">${expChip(l.expires_at,l.expired)}</div>
+      <div class="cfg-divider-v"></div>
+      <div class="cfg-badges-col">
+        ${protoBadge(l.protocol)}
+        <span class="cfg-sub-tag" title="پورت اتصال"><i class="ti ti-route"></i> :${l.port||443}</span>
+        <span class="cfg-sub-tag" title="Fingerprint"><i class="ti ti-fingerprint"></i> ${esc(l.fingerprint||'chrome')}</span>
+        <span class="cfg-sub-tag" title="آی‌پی‌های متصل / محدودیت"><i class="ti ti-users"></i> ${l.connected_ips||0}${l.ip_limit?('/'+l.ip_limit):' (∞)'}</span>
+        <span class="cfg-sub-tag" title="محدودیت سرعت"><i class="ti ti-gauge"></i> ${l.speed_limit_bytes?((l.speed_limit_bytes*8/1024/1024).toFixed(1)+' Mbps'):'نامحدود'}</span>
+      </div>
+      <div class="cfg-divider-v"></div>
+      <div class="cfg-actions">
+        <button class="tog${allowed?' on':''}" onclick="toggleActive('${l.uuid}',${!l.active})" title="فعال/غیرفعال"></button>
+        <button class="btn btn-sm btn-g btn-icon" onclick="navigator.clipboard.writeText('${esc(l.vless_link)}').then(()=>toast('لینک کپی شد','ok'))" title="کپی لینک"><i class="ti ti-copy"></i></button>
+        <button class="btn btn-sm btn-g btn-icon" onclick="window.open('${esc(l.sub_url)}','_blank')" title="باز کردن داشبورد ساب"><i class="ti ti-rss"></i></button>
+        <button class="btn btn-sm btn-g btn-icon" onclick="showQR('${esc(l.vless_link)}')" title="QR"><i class="ti ti-qrcode"></i></button>
+        <button class="btn btn-sm btn-g btn-icon" onclick="openLinkChart('${l.uuid}','${esc(l.label)}')" title="نمودار مصرف ۳۰ روز اخیر"><i class="ti ti-chart-line"></i></button>
+        <button class="btn btn-sm btn-amber btn-icon" onclick="openEditLink('${l.uuid}')" title="ویرایش"><i class="ti ti-edit"></i></button>
+        <button class="btn btn-sm btn-g btn-icon" onclick="resetUsage('${l.uuid}')" title="ریست مصرف"><i class="ti ti-rotate"></i></button>
+        <button class="btn btn-sm btn-d btn-icon" onclick="deleteLink('${l.uuid}')" title="حذف"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>
+  </div>`;
+}).join('');
+  updateBulkBar();
+}
+function toggleLinkSelect(uuid,el){
+  if(el.checked)selectedLinks.add(uuid);else selectedLinks.delete(uuid);
+  updateBulkBar();
+}
+function toggleSelectAllLinks(el){
+  const list=filteredLinksList();
+  if(el.checked)list.forEach(l=>selectedLinks.add(l.uuid));
+  else list.forEach(l=>selectedLinks.delete(l.uuid));
+  renderLinksGrid();
+}
+function clearLinksSelection(){selectedLinks.clear();renderLinksGrid();}
+function updateBulkBar(){
+  const bar=document.getElementById('links-bulkbar');
+  const selall=document.getElementById('links-selall');
+  const n=selectedLinks.size;
+  document.getElementById('links-selcount').textContent=toFa(n);
+  bar.style.display=n>0?'flex':'none';
+  const list=filteredLinksList();
+  selall.checked=list.length>0&&list.every(l=>selectedLinks.has(l.uuid));
+}
+async function bulkLinksAction(action){
+  const uuids=Array.from(selectedLinks);
+  if(!uuids.length)return;
+  if(action==='delete'&&!confirm(`حذف ${toFa(uuids.length)} کانفیگ انتخاب‌شده؟ این عمل غیرقابل بازگشت است.`))return;
+  try{
+    await Promise.all(uuids.map(uuid=>{
+      if(action==='activate')return authF('/api/links/'+uuid,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({active:true})});
+      if(action==='deactivate')return authF('/api/links/'+uuid,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({active:false})});
+      if(action==='reset')return authF('/api/links/'+uuid,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({reset_usage:true})});
+      if(action==='delete')return authF('/api/links/'+uuid,{method:'DELETE'});
+    }));
+    const msg={activate:'کانفیگ‌های انتخاب‌شده فعال شدند ✓',deactivate:'کانفیگ‌های انتخاب‌شده غیرفعال شدند ✓',reset:'مصرف کانفیگ‌های انتخاب‌شده ریست شد ✓',delete:'کانفیگ‌های انتخاب‌شده حذف شدند ✓'}[action];
+    toast(msg,'ok');
+    if(action==='delete')selectedLinks.clear();
+    loadLinks();
+  }catch(e){toast('خطا در اجرای عملیات گروهی','err')}
+}
+let linkChart=null;
+async function openLinkChart(uuid,label){
+  document.getElementById('lc-title').textContent='نمودار مصرف ۳۰ روز اخیر — '+label;
+  openModal('modal-link-chart');
+  try{
+    const r=await authF('/api/links/'+uuid+'/history'),d=await r.json();
+    const labels=d.days.map(x=>x.date.slice(5));
+    const vals=d.days.map(x=>+(x.bytes/1024**2).toFixed(2));
+    const ctx=document.getElementById('lc-canvas');
+    if(linkChart)linkChart.destroy();
+    linkChart=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'مصرف (MB)',data:vals,backgroundColor:'rgba(139,92,246,.55)',borderRadius:5,maxBarThickness:22}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{beginAtZero:true}}}});
+  }catch(e){toast('خطا در دریافت تاریخچه مصرف','err')}
+}
+async function createLink(){
+  const label=document.getElementById('nl-label').value.trim()||'کانفیگ جدید';
+  const val=document.getElementById('nl-val').value;
+  const unit=document.getElementById('nl-unit').value;
+  const exp=document.getElementById('nl-exp').value;
+  const note=document.getElementById('nl-note').value.trim();
+  const protocol=document.getElementById('nl-proto').value||'vless-ws';
+  const fingerprint=document.getElementById('nl-fp').value||'chrome';
+  const alpn=document.getElementById('nl-alpn').value.trim();
+  const port=443;
+  const ip_limit=Number(document.getElementById('nl-iplimit').value)||0;
+  const speed_limit_value=Number(document.getElementById('nl-speed').value)||0;
+  const speed_limit_unit=document.getElementById('nl-speed-unit').value;
+  try{
+    const r=await authF('/api/links',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({label,limit_value:val||0,limit_unit:unit,expires_days:exp||0,note,protocol,fingerprint,alpn,port,ip_limit,speed_limit_value,speed_limit_unit})});
+    if(!r.ok)throw new Error('failed');
+    ['nl-label','nl-val','nl-exp','nl-note','nl-alpn'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('nl-iplimit').value='0';
+    document.getElementById('nl-speed').value='0';
+    document.getElementById('nl-alpn-preset').value='';
+    document.getElementById('nl-alpn').style.display='none';
+    toast('کانفیگ ساخته شد ✓','ok');loadLinks();
+  }catch(e){toast('خطا در ساخت','err')}
+}
+function openEditLink(uuid){
+  const l=allLinksList.find(x=>x.uuid===uuid);
+  if(!l)return;
+  document.getElementById('el-uuid').value=uuid;
+  document.getElementById('el-label').value=l.label;
+  document.getElementById('el-note').value=l.note||'';
+  if(l.limit_bytes===0){document.getElementById('el-val').value='';document.getElementById('el-unit').value='GB';}
+  else{document.getElementById('el-val').value=(l.limit_bytes/1024/1024).toFixed(0);document.getElementById('el-unit').value='MB';}
+  document.getElementById('el-exp').value='';
+  document.getElementById('el-fp').value=l.fingerprint||'chrome';
+  document.getElementById('el-alpn').value=l.alpn||'';
+  document.getElementById('el-port').value=l.port||443;
+  document.getElementById('el-iplimit').value=l.ip_limit||0;
+  if(!l.speed_limit_bytes){document.getElementById('el-speed').value='0';document.getElementById('el-speed-unit').value='MBIT';}
+  else{document.getElementById('el-speed').value=(l.speed_limit_bytes*8/1024/1024).toFixed(2);document.getElementById('el-speed-unit').value='MBIT';}
+  openModal('modal-edit-link');
+}
+async function saveEditLink(){
+  const uuid=document.getElementById('el-uuid').value;
+  const label=document.getElementById('el-label').value.trim();
+  const note=document.getElementById('el-note').value.trim();
+  const val=document.getElementById('el-val').value;
+  const unit=document.getElementById('el-unit').value;
+  const exp=document.getElementById('el-exp').value;
+  const fingerprint=document.getElementById('el-fp').value||'chrome';
+  const alpn=document.getElementById('el-alpn').value.trim();
+  const port=Number(document.getElementById('el-port').value)||443;
+  const ip_limit=Number(document.getElementById('el-iplimit').value)||0;
+  const speed_limit_value=Number(document.getElementById('el-speed').value)||0;
+  const speed_limit_unit=document.getElementById('el-speed-unit').value;
+  const body={label,note,limit_value:val||0,limit_unit:unit,fingerprint,alpn,port,ip_limit,speed_limit_value,speed_limit_unit};
+  if(exp&&Number(exp)>0)body.expires_days=Number(exp);
+  try{
+    const r=await authF('/api/links/'+uuid,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok)throw new Error();
+    closeModal('modal-edit-link');
+    toast('کانفیگ ویرایش شد ✓','ok');loadLinks();
+  }catch(e){toast('خطا در ویرایش','err')}
+}
+async function toggleActive(uuid,newState){
+  try{const r=await authF('/api/links/'+uuid,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({active:newState})});if(!r.ok)throw new Error();toast(newState?'فعال شد ✓':'غیرفعال شد','ok');loadLinks();}catch(e){toast('خطا','err')}
+}
+async function resetUsage(uuid){
+  try{const r=await authF('/api/links/'+uuid,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({reset_usage:true})});if(!r.ok)throw new Error();toast('مصرف ریست شد ✓','ok');loadLinks();}catch(e){toast('خطا','err')}
+}
+async function deleteLink(uuid){
+  if(!confirm('حذف این کانفیگ؟'))return;
+  try{const r=await authF('/api/links/'+uuid,{method:'DELETE'});if(!r.ok)throw new Error();toast('حذف شد ✓','ok');loadLinks();}catch(e){toast('خطا','err')}
+}
+function showQR(link){window.open('https://api.qrserver.com/v1/create-qr-code/?size=300x300&data='+encodeURIComponent(link),'_blank')}
+function parseBytesFmt(s){
+  if(!s)return 0;
+  const m=String(s).match(/([\d.]+)\s*([A-Za-z]+)/);
+  if(!m)return 0;
+  const n=parseFloat(m[1]),u=m[2].toUpperCase();
+  const mult={B:1,KB:1024,MB:1024**2,GB:1024**3,TB:1024**4};
+  return n*(mult[u]||1);
+}
+let connsExpanded=new Set();
+function toggleConnCard(uuid){
+  if(connsExpanded.has(uuid))connsExpanded.delete(uuid);else connsExpanded.add(uuid);
+  renderConnsGrid(window.__lastConfigs||[]);
+}
+function renderConnsGrid(configs){
+  const grid=document.getElementById('conns-grid');
+  grid.innerHTML=configs.map(cfg=>{
+    const open=connsExpanded.has(cfg.uuid);
+    const ipsHtml=(cfg.connections||[]).map(c=>{
+      const secs=c.connected_at?Math.max(0,Math.floor((Date.now()-new Date(c.connected_at).getTime())/1000)):0;
+      const dur=secs<60?secs+' ثانیه':secs<3600?Math.floor(secs/60)+' دقیقه':Math.floor(secs/3600)+' ساعت';
+      return `<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:10px;background:var(--accent-d);border:1px solid var(--card-b);margin-top:7px">
+        <div style="display:flex;align-items:center;gap:8px;min-width:0">
+          <i class="ti ti-device-desktop" style="color:var(--t3)"></i>
+          <span style="font-family:ui-monospace,monospace;font-size:12px;color:var(--t1)">${esc(c.ip)}</span>
+          <button class="conn-ip-copy" onclick="navigator.clipboard.writeText('${esc(c.ip)}').then(()=>toast('IP کپی شد','ok'))" title="کپی IP"><i class="ti ti-copy"></i></button>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:10.5px;color:var(--t3);flex-shrink:0">
+          <span><i class="ti ti-repeat" style="font-size:10px"></i> ${toFa(c.sessions)} سشن</span>
+          <span><i class="ti ti-transfer" style="font-size:10px"></i> ${esc(c.bytes_fmt)}</span>
+          <span><i class="ti ti-clock" style="font-size:10px"></i> ${dur}</span>
+        </div>
+      </div>`;
+    }).join('') || '<div style="padding:10px;color:var(--t3);font-size:11px">اتصالی نیست</div>';
+    return `<div class="conn-card-v2" style="cursor:pointer" onclick="toggleConnCard('${cfg.uuid}')">
+      <div class="conn-card-v2-glow"></div>
+      <div class="conn-card-v2-top">
+        <div class="conn-avatar"><i class="ti ti-key"></i></div>
+        <div class="conn-card-v2-id">
+          <div class="conn-ip-v2">${esc(cfg.label)}</div>
+          <div class="conn-label-v2">${toFa(cfg.ip_count)} آی‌پی · ${toFa(cfg.sessions)} سشن</div>
+        </div>
+        <span class="conn-status-pill"><span class="dot dg pulse"></span> زنده</span>
+      </div>
+      <div class="conn-card-v2-divider"></div>
+      <div class="conn-card-v2-body">
+        <div class="conn-proto-row">${protoBadge(cfg.protocol)}</div>
+        <div class="conn-stat-row">
+          <div class="conn-stat-box">
+            <div class="conn-stat-icon"><i class="ti ti-transfer"></i></div>
+            <div>
+              <div class="conn-stat-text-label">ترافیک</div>
+              <div class="conn-stat-text-val">${esc(cfg.bytes_fmt)}</div>
+            </div>
+          </div>
+          <div class="conn-stat-box">
+            <div class="conn-stat-icon time"><i class="ti ti-users"></i></div>
+            <div>
+              <div class="conn-stat-text-label">آی‌پی‌های متصل</div>
+              <div class="conn-stat-text-val">${toFa(cfg.ip_count)}</div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center;font-size:10.5px;color:var(--accent2);margin-top:8px"><i class="ti ti-chevron-${open?'up':'down'}"></i> ${open?'بستن':'نمایش اتصالات'}</div>
+        ${open?`<div onclick="event.stopPropagation()">${ipsHtml}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+async function loadConns(){
+  try{
+    const r=await authF('/api/connections'),d=await r.json();
+    const grid=document.getElementById('conns-grid'),ce=document.getElementById('conns-empty');
+    document.getElementById('conns-live').innerHTML='<span class="dot dg pulse"></span> '+d.raw_count+' اتصال';
+    document.getElementById('ch-count').textContent=toFa(d.raw_count);
+    const configs=d.configs||[];
+    window.__lastConfigs=configs;
+    if(!configs.length){
+      grid.innerHTML='';ce.style.display='block';
+      document.getElementById('ch-traffic').textContent='—';
+      document.getElementById('ch-avgdur').textContent='—';
+      document.getElementById('ch-uniq').textContent='—';
+      return;
+    }
+    ce.style.display='none';
+    const totalBytes=configs.reduce((s,c)=>s+(c.bytes||0),0);
+    document.getElementById('ch-traffic').textContent=fmtB(totalBytes);
+    const uniqIps=configs.reduce((s,c)=>s+c.ip_count,0);
+    document.getElementById('ch-uniq').textContent=toFa(uniqIps);
+    const allDurs=[];
+    configs.forEach(c=>(c.connections||[]).forEach(ip=>allDurs.push(ip.connected_at?Math.max(0,Math.floor((Date.now()-new Date(ip.connected_at).getTime())/1000)):0)));
+    const avgSec=allDurs.length?Math.floor(allDurs.reduce((a,b)=>a+b,0)/allDurs.length):0;
+    document.getElementById('ch-avgdur').textContent=avgSec<60?avgSec+' ث':avgSec<3600?Math.floor(avgSec/60)+' د':Math.floor(avgSec/3600)+' س';
+    renderConnsGrid(configs);
+  }catch(e){console.error(e)}
+}
+
+// ── داشبورد کانفیگ‌ها: از داده‌ی همون /api/links و /api/connections استفاده می‌کنه ──
+let cfgDashSelected=null;
+async function loadCfgDash(){
+  try{
+    if(!allLinksList.length)await loadLinks();
+    await loadConns();
+    renderCfgDashList();
+    if(cfgDashSelected&&allLinksList.some(l=>l.uuid===cfgDashSelected))renderCfgDashDetail(cfgDashSelected);
+  }catch(e){console.error(e)}
+}
+function renderCfgDashList(){
+  const wrap=document.getElementById('cfgdash-list'),empty=document.getElementById('cfgdash-empty');
+  document.getElementById('cfgdash-count').textContent=toFa(allLinksList.length);
+  if(!allLinksList.length){wrap.innerHTML='';empty.style.display='block';return}
+  empty.style.display='none';
+  wrap.innerHTML=allLinksList.map(l=>{
+    const allowed=l.active&&!l.expired;
+    const pct=l.limit_bytes===0?0:Math.min(100,l.used_bytes/l.limit_bytes*100);
+    const bc=pct>90?'var(--red)':pct>70?'var(--amber)':'var(--accent)';
+    return `<div class="cfgdash-item${cfgDashSelected===l.uuid?' on':''}" onclick="selectCfgDash('${l.uuid}')">
+      <div class="cfgdash-item-top"><span class="cfg-status-dot ${allowed?'pulse':''}"></span><span class="cfgdash-item-label">${esc(l.label)}</span>${protoBadge(l.protocol)}</div>
+      <div class="ubar"><div class="ubar-f" style="width:${pct}%;background:${bc}"></div></div>
+      <div class="utxt"><span>${fmtB(l.used_bytes)}</span><span>${l.connected_ips||0} آی‌پی زنده</span></div>
+    </div>`;
+  }).join('');
+}
+function selectCfgDash(uuid){cfgDashSelected=uuid;renderCfgDashList();renderCfgDashDetail(uuid)}
+function renderCfgDashDetail(uuid){
+  const box=document.getElementById('cfgdash-detail');
+  const l=allLinksList.find(x=>x.uuid===uuid);
+  if(!l){box.innerHTML='<div class="card"><div class="empty"><i class="ti ti-mood-empty"></i><p>این کانفیگ دیگر وجود ندارد</p></div></div>';return}
+  const grp=(window.__lastConfigs||[]).find(c=>c.uuid===uuid);
+  const ips=grp?grp.connections||[]:[];
+  const pct=l.limit_bytes===0?0:Math.min(100,l.used_bytes/l.limit_bytes*100);
+  const bc=pct>90?'var(--red)':pct>70?'var(--amber)':'var(--accent)';
+  const speedTxt=l.speed_limit_bytes?((l.speed_limit_bytes*8/1024/1024).toFixed(1)+' Mbps'):'نامحدود';
+  box.innerHTML=`
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title"><i class="ti ti-key"></i> ${esc(l.label)} ${l.active&&!l.expired?'<span class="badge bg-green" style="margin-right:6px">فعال</span>':'<span class="badge bg-red" style="margin-right:6px">'+(l.expired?'منقضی':'غیرفعال')+'</span>'}
+        <span class="ml-auto" style="display:flex;gap:6px">
+          <button class="btn btn-sm btn-g btn-icon" onclick="navigator.clipboard.writeText('${esc(l.vless_link)}').then(()=>toast('لینک کپی شد','ok'))" title="کپی لینک"><i class="ti ti-copy"></i></button>
+          <button class="btn btn-sm btn-g btn-icon" onclick="showQR('${esc(l.vless_link)}')" title="QR"><i class="ti ti-qrcode"></i></button>
+          <button class="btn btn-sm btn-g btn-icon" onclick="openLinkChart('${l.uuid}','${esc(l.label)}')" title="نمودار مصرف"><i class="ti ti-chart-line"></i></button>
+        </span>
+      </div>
+      <div class="cfgdash-stats">
+        <div class="cfgdash-stat"><div class="cfgdash-stat-l">مصرف / سقف</div><div class="cfgdash-stat-v">${fmtB(l.used_bytes)}</div><div class="utxt" style="margin-top:6px"><span></span><span>از ${l.limit_bytes===0?'∞':fmtB(l.limit_bytes)}</span></div><div class="ubar" style="margin-top:6px"><div class="ubar-f" style="width:${pct}%;background:${bc}"></div></div></div>
+        <div class="cfgdash-stat"><div class="cfgdash-stat-l">محدودیت سرعت</div><div class="cfgdash-stat-v" style="font-size:14px">${speedTxt}</div></div>
+        <div class="cfgdash-stat"><div class="cfgdash-stat-l">آی‌پی زنده / محدودیت</div><div class="cfgdash-stat-v">${toFa(l.connected_ips||0)}${l.ip_limit?(' / '+toFa(l.ip_limit)):' (∞)'}</div></div>
+        <div class="cfgdash-stat"><div class="cfgdash-stat-l">انقضا</div><div class="cfgdash-stat-v" style="font-size:14px">${expChip(l.expires_at,l.expired)}</div></div>
+      </div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-route"></i> پروتکل</span><span class="sr-v">${protoBadge(l.protocol)}</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-plug"></i> پورت</span><span class="sr-v">${toFa(l.port||443)}</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-fingerprint"></i> Fingerprint</span><span class="sr-v">${esc(l.fingerprint||'chrome')}</span></div>
+      <div class="sr"><span class="sr-k"><i class="ti ti-calendar"></i> تاریخ ساخت</span><span class="sr-v">${new Date(l.created_at).toLocaleDateString('fa-IR')}</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-map-pin"></i> آی‌پی‌های متصل هم‌اکنون <span class="ml-auto badge bg-blue">${toFa(ips.length)}</span></div>
+      ${ips.length?ips.map(c=>{
+        const secs=c.connected_at?Math.max(0,Math.floor((Date.now()-new Date(c.connected_at).getTime())/1000)):0;
+        const dur=secs<60?secs+' ثانیه':secs<3600?Math.floor(secs/60)+' دقیقه':Math.floor(secs/3600)+' ساعت';
+        return `<div class="cfgdash-ip-row">
+          <span class="ip"><span class="dot dg pulse" style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block"></span> ${esc(c.ip)}</span>
+          <div class="cfgdash-ip-meta">
+            <span><i class="ti ti-repeat"></i> ${toFa(c.sessions)} سشن</span>
+            <span><i class="ti ti-transfer"></i> ${esc(c.bytes_fmt)}</span>
+            <span><i class="ti ti-clock"></i> ${dur}</span>
+          </div>
+        </div>`;
+      }).join(''):'<div class="empty"><i class="ti ti-plug-off"></i><p>در حال حاضر آی‌پی متصلی به این کانفیگ نیست</p></div>'}
+    </div>
+  `;
+}
+
+async function loadErrs(){try{const r=await authF('/stats'),d=await r.json();renderErrs(d.recent_errors||[]);}catch(e){}}
+function cpText(id){navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>toast('کپی شد ✓','ok'))}
+function qrFor(id){showQR(document.getElementById(id).textContent)}
+function refreshAll(){fetchStats();loadLinks();if(document.getElementById('pg-connections').classList.contains('on'))loadConns();if(document.getElementById('pg-logs').classList.contains('on'))loadActivity();toast('رفرش شد','ok')}
+async function changePw(){
+  const cur=document.getElementById('cp-cur').value,nw=document.getElementById('cp-new').value,cf=document.getElementById('cp-cf').value;
+  if(!cur||!nw||!cf){toast('همه فیلدها را پر کنید','err');return}
+  if(nw.length<4){toast('حداقل ۴ کاراکتر','err');return}
+  if(nw!==cf){toast('تکرار رمز اشتباه','err');return}
+  try{
+    const r=await authF('/api/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({current_password:cur,new_password:nw})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(d.detail||'خطا');
+    toast('رمز تغییر کرد ✓','ok');
+    ['cp-cur','cp-new','cp-cf'].forEach(id=>document.getElementById(id).value='');
+  }catch(e){toast('✗ '+e.message,'err')}
+}
+function togglePwField(id,btn){
+  const inp=document.getElementById(id);
+  const icon=btn.querySelector('i');
+  const toText=inp.type==='password';
+  inp.type=toText?'text':'password';
+  icon.className='ti '+(toText?'ti-eye-off':'ti-eye');
+}
+function checkPwStrength(val){
+  const segs=document.querySelectorAll('#pw-strength-bar .pw-strength-seg');
+  const label=document.getElementById('pw-strength-label');
+  const reqLen=document.getElementById('req-len'),reqNum=document.getElementById('req-num'),reqCase=document.getElementById('req-case');
+  const hasLen=val.length>=4,hasNum=/\d/.test(val),hasCase=/[a-z]/.test(val)&&/[A-Z]/.test(val),hasLong=val.length>=8;
+  reqLen.classList.toggle('met',hasLen);
+  reqNum.classList.toggle('met',hasNum);
+  reqCase.classList.toggle('met',hasCase);
+  let score=0;if(hasLen)score++;if(hasNum)score++;if(hasCase)score++;if(hasLong)score++;
+  const colors=['#EF4444','#F59E0B','#3B82F6','#10B981'],labels=['خیلی ضعیف','ضعیف','متوسط','قوی'];
+  segs.forEach((s,i)=>{s.style.background=i<score?colors[Math.max(0,score-1)]:'rgba(100,116,139,.2)'});
+  if(val.length===0){label.innerHTML='<i class="ti ti-shield"></i> قدرت رمز';return}
+  label.innerHTML=`<i class="ti ti-shield-check" style="color:${colors[Math.max(0,score-1)]}"></i> ${labels[Math.max(0,score-1)]}`;
+}
+function makeGradient(ctx,color1,color2){
+  const g=ctx.createLinearGradient(0,0,0,260);
+  g.addColorStop(0,color1);g.addColorStop(1,color2);
+  return g;
+}
+function initCharts(){
+  const c1=document.getElementById('ch1').getContext('2d');
+  const grad1=makeGradient(c1,'rgba(59,130,246,.38)','rgba(59,130,246,0)');
+  const opts={
+    responsive:true,maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        backgroundColor:'rgba(13,27,46,.96)',borderColor:'rgba(59,130,246,.3)',borderWidth:1,
+        titleColor:'#E8F4FF',bodyColor:'#7BAED4',padding:11,cornerRadius:10,displayColors:false,
+        titleFont:{family:'Vazirmatn',size:11,weight:'700'},bodyFont:{family:'Vazirmatn',size:11},
+        callbacks:{label:v=>`${v.parsed.y.toFixed(2)} مگابایت`}
+      }
+    },
+    scales:{
+      x:{grid:{display:false},border:{display:false},ticks:{color:'#3D6B8E',font:{size:9,family:'Vazirmatn'}}},
+      y:{grid:{color:'rgba(59,130,246,.06)'},border:{display:false},ticks:{color:'#3D6B8E',font:{size:9,family:'Vazirmatn'},callback:v=>v+' MB'}}
+    },
+    elements:{line:{capBezierPoints:true}}
+  };
+  const ds1={label:'MB',data:[],borderColor:'#3B82F6',backgroundColor:grad1,fill:true,tension:.42,pointRadius:0,pointHoverRadius:6,pointHoverBackgroundColor:'#3B82F6',pointHoverBorderColor:'#fff',pointHoverBorderWidth:2,borderWidth:2.5};
+  ch1=new Chart(document.getElementById('ch1'),{type:'line',data:{labels:[],datasets:[ds1]},options:opts});
+
+  function makeGradientV2(ctx,c1,c2,c3){
+    const g=ctx.createLinearGradient(0,0,0,320);
+    g.addColorStop(0,c1);g.addColorStop(.6,c2);g.addColorStop(1,c3);
+    return g;
+  }
+  const c3ctx=document.getElementById('ch3').getContext('2d');
+  const gradFill3=makeGradientV2(c3ctx,'rgba(59,130,246,.45)','rgba(59,130,246,.08)','rgba(59,130,246,0)');
+  ch3=new Chart(document.getElementById('ch3'),{
+    type:'line',
+    data:{labels:[],datasets:[
+      {label:'مصرف',data:[],borderColor:'#3B82F6',backgroundColor:gradFill3,fill:true,tension:.45,pointRadius:0,pointHoverRadius:7,pointHoverBackgroundColor:'#fff',pointHoverBorderColor:'#3B82F6',pointHoverBorderWidth:3,borderWidth:3,order:2},
+      {label:'میانگین',data:[],borderColor:'#F59E0B',borderDash:[6,5],borderWidth:1.6,pointRadius:0,fill:false,tension:0,order:1}
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'rgba(13,27,46,.97)',borderColor:'rgba(59,130,246,.35)',borderWidth:1,
+          titleColor:'#E8F4FF',bodyColor:'#9DC3E8',padding:13,cornerRadius:12,displayColors:true,boxPadding:4,
+          titleFont:{family:'Vazirmatn',size:11.5,weight:'700'},bodyFont:{family:'Vazirmatn',size:11},
+          callbacks:{label:v=>` ${v.dataset.label}: ${v.parsed.y.toFixed(2)} MB`}
+        }
+      },
+      scales:{
+        x:{grid:{display:false},border:{display:false},ticks:{color:'#3D6B8E',font:{size:9.5,family:'Vazirmatn'},maxRotation:0}},
+        y:{grid:{color:'rgba(59,130,246,.05)'},border:{display:false},ticks:{color:'#3D6B8E',font:{size:9.5,family:'Vazirmatn'},callback:v=>v+' MB'}}
+      }
+    }
+  });
+
+  ch2=new Chart(document.getElementById('ch2'),{
+    type:'doughnut',
+    data:{labels:['VLESS/WS','XHTTP Ultra','HTTP Proxy'],datasets:[{
+      data:[55,35,10],
+      backgroundColor:['#3B82F6','#10B981','#8B5CF6'],
+      borderColor:getComputedStyle(document.documentElement).getPropertyValue('--card')||'#0d1b2e',
+      borderWidth:4,hoverOffset:10,borderRadius:6,spacing:3
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,cutout:'72%',
+      plugins:{
+        legend:{position:'bottom',labels:{color:'var(--t2)',font:{size:10,family:'Vazirmatn'},padding:12,usePointStyle:true,pointStyle:'circle'}},
+        tooltip:{backgroundColor:'rgba(13,27,46,.96)',borderColor:'rgba(59,130,246,.3)',borderWidth:1,padding:10,cornerRadius:10,bodyFont:{family:'Vazirmatn'},titleFont:{family:'Vazirmatn'}}
+      }
+    }
+  });
+}
+let ws;
+function wsLog(c,m){const l=document.getElementById('ws-log'),p=document.createElement('p');const colors={ok:'#34D399',err:'#F87171',info:'#7BAED4',sent:'#FCD34D'};p.style.color=colors[c]||'#fff';p.textContent='['+new Date().toLocaleTimeString('fa-IR')+'] '+m;l.appendChild(p);l.scrollTop=l.scrollHeight}
+function wsConn(){const u=document.getElementById('ws-uuid').value.trim();if(!u){toast('UUID را وارد کنید','err');return}const url=(location.protocol==='https:'?'wss':'ws')+'://'+location.host+'/ws/'+u;wsLog('info','اتصال: '+url);ws=new WebSocket(url);ws.onopen=()=>wsLog('ok','✓ متصل - UUID معتبر');ws.onerror=()=>wsLog('err','✗ خطا - UUID نامعتبر یا غیرفعال');ws.onmessage=m=>wsLog('info','دریافت '+(m.data.size||m.data.length)+' byte');ws.onclose=e=>wsLog('err','قطع ('+e.code+')'+(e.code===1008?' - دسترسی رد شد':''))}
+function wsSend(){const m=document.getElementById('ws-msg').value;if(!m||!ws||ws.readyState!==1)return;ws.send(m);wsLog('sent','ارسال: '+m);document.getElementById('ws-msg').value=''}
+function wsDisc(){if(ws)ws.close()}
+document.addEventListener('DOMContentLoaded',async()=>{
+  await checkAuth();
+  initCharts();
+  document.getElementById('set-host').textContent=location.host;
+  fetchStats();loadLinks();
+  setInterval(fetchStats,4000);
+  setInterval(()=>{
+    if(document.getElementById('pg-links').classList.contains('on'))loadLinks();
+    if(document.getElementById('pg-connections').classList.contains('on'))loadConns();
+    if(document.getElementById('pg-logs').classList.contains('on'))loadActivity();
+    if(document.getElementById('pg-cfgdash').classList.contains('on'))loadCfgDash();
+  },5000);
+});
+</script>
+</body></html>"""
+
+
+# جایگزینی نهایی لوگو در صفحات استاتیک (LOGIN_HTML / DASHBOARD_HTML)
+LOGIN_HTML = LOGIN_HTML.replace("__LOGO_B64__", LOGO_B64)
+DASHBOARD_HTML = DASHBOARD_HTML.replace("__LOGO_B64__", LOGO_B64)
+
+def get_public_page_html(uuid_key: str) -> str:
+    """صفحه پابلیک ساب v3 — طراحی حرفه‌ای‌تر: لینک کانفیگ پنهان با دکمه نمایش، صفحه‌ی رمز با طراحی ویژه"""
+    return f"""<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>X4G Sub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+*{{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}}
+:root{{
+  --bg:#060a14;--bg2:#0a1020;--bg3:#0d1428;
+  --card:#0c1326;--card-b:rgba(96,148,246,0.12);--card-bh:rgba(96,148,246,0.28);
+  --accent:#3B7CF6;--accent2:#6EA3FF;--accent-d:rgba(59,124,246,0.1);
+  --green:#1FB87E;--green-bg:rgba(31,184,126,0.1);--green-t:#3FD79C;
+  --red:#EF4444;--red-bg:rgba(239,68,68,0.1);--red-t:#FB8585;
+  --amber:#F2A33D;--amber-bg:rgba(242,163,61,0.1);--amber-t:#F9C988;
+  --purple:#9D7BF0;--purple-bg:rgba(157,123,240,0.1);--purple-t:#BCA4F7;
+  --t1:#EFF4FF;--t2:#8AA0C4;--t3:#48577A;
+  --radius:18px;--shadow:0 12px 40px rgba(0,0,0,0.45);
+  --serif:'Vazirmatn',sans-serif;
+}}
+[data-theme="light"]{{
+  --bg:#F0F3FA;--bg2:#E5ECF8;--bg3:#D9E3F4;
+  --card:#FFFFFF;--card-b:rgba(59,124,246,0.14);--card-bh:rgba(59,124,246,0.32);
+  --accent:#2E63D6;--accent2:#1E4CB8;--accent-d:rgba(46,99,214,0.08);
+  --green:#0E9A6A;--green-bg:rgba(14,154,106,0.08);--green-t:#0A7553;
+  --red:#DC2626;--red-bg:rgba(220,38,38,0.08);--red-t:#A51E1E;
+  --amber:#C97A12;--amber-bg:rgba(201,122,18,0.08);--amber-t:#8F5A0C;
+  --purple:#7350D6;--purple-bg:rgba(115,80,214,0.08);--purple-t:#5A3CAD;
+  --t1:#101A30;--t2:#48577A;--t3:#8694B0;
+  --shadow:0 12px 36px rgba(20,40,90,0.12);
+}}
+html,body{{min-height:100%;background:var(--bg);font-family:var(--serif);color:var(--t1);font-size:14px;transition:background .35s,color .35s}}
+.bg-fx{{position:fixed;inset:0;background:radial-gradient(ellipse 70% 45% at 50% -8%,rgba(59,124,246,0.13),transparent 62%),var(--bg);z-index:0;pointer-events:none;transition:background .35s}}
+.grid-fx{{position:fixed;inset:0;background-image:linear-gradient(rgba(96,148,246,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(96,148,246,0.025) 1px,transparent 1px);background-size:46px 46px;z-index:0;pointer-events:none}}
+.wrap{{position:relative;z-index:10;max-width:800px;margin:0 auto;padding:24px 16px 64px}}
+.top{{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;gap:10px}}
+.brand{{display:flex;align-items:center;gap:11px;min-width:0}}
+.brand-img{{width:40px;height:40px;border-radius:50%;overflow:hidden;border:1px solid var(--card-b);box-shadow:0 0 14px rgba(139,92,246,.3),0 0 8px rgba(59,130,246,.25);flex-shrink:0}}
+.brand-img img{{width:100%;height:100%;object-fit:cover}}
+.brand-name{{font-size:14.5px;font-weight:800;color:var(--t1);letter-spacing:-.01em}}
+.brand-sub{{font-size:9.5px;color:var(--t3);font-weight:500}}
+.top-actions{{display:flex;align-items:center;gap:6px;flex-shrink:0}}
+.icon-btn{{width:36px;height:36px;border-radius:11px;background:var(--card);border:1px solid var(--card-b);color:var(--t2);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:.18s}}
+.icon-btn:hover{{background:var(--accent-d);color:var(--accent2);border-color:var(--card-bh)}}
+
+.sub-info{{background:var(--card);border:1px solid var(--card-b);border-radius:22px;padding:24px 24px 22px;margin-bottom:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}}
+.sub-info::before{{content:'';position:absolute;top:0;right:0;width:160px;height:160px;background:radial-gradient(circle at top right,rgba(59,124,246,.1),transparent 70%);pointer-events:none}}
+.sub-eyebrow{{font-size:10px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;display:flex;align-items:center;gap:6px}}
+.sub-eyebrow i{{font-size:13px}}
+.sub-name{{font-size:23px;font-weight:800;color:var(--t1);margin-bottom:6px;letter-spacing:-.02em}}
+.sub-desc{{font-size:12.5px;color:var(--t2);line-height:1.8;margin-bottom:14px}}
+.sub-meta-row{{font-size:10.5px;color:var(--t3);margin-bottom:14px;display:flex;align-items:center;gap:6px}}
+.sub-sub-box{{background:var(--accent-d);border:1px solid var(--card-b);border-radius:13px;padding:12px 14px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}}
+.sub-sub-url{{font-family:ui-monospace,monospace;font-size:10px;color:var(--accent2);word-break:break-all;flex:1;min-width:140px}}
+
+.stats-bar{{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}}
+.stat-card{{background:var(--card);border:1px solid var(--card-b);border-radius:16px;padding:16px 17px;transition:.2s}}
+.stat-card:hover{{border-color:var(--card-bh);transform:translateY(-1px)}}
+.stat-label{{font-size:9px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}}
+.stat-val{{font-size:22px;font-weight:800;color:var(--t1);line-height:1;letter-spacing:-.01em}}
+.stat-sub{{font-size:9.5px;color:var(--t3);margin-top:6px}}
+
+.copy-all-bar{{display:flex;align-items:center;gap:12px;background:linear-gradient(120deg,var(--accent) 0%,#2952C8 100%);border-radius:18px;padding:16px 19px;margin-bottom:18px;box-shadow:0 10px 30px rgba(59,124,246,.28);flex-wrap:wrap}}
+.copy-all-text{{flex:1;min-width:160px}}
+.copy-all-title{{font-size:13.5px;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px}}
+.copy-all-sub{{font-size:10px;color:rgba(255,255,255,.78);margin-top:3px}}
+.copy-all-btn{{background:#fff;color:#1D4ED8;border:none;border-radius:12px;padding:10px 19px;font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.18s;white-space:nowrap}}
+.copy-all-btn:hover{{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.22)}}
+.copy-all-btn:active{{transform:translateY(0) scale(.98)}}
+
+.cfg-title{{font-size:12px;font-weight:800;color:var(--t2);margin-bottom:13px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.07em}}
+.cfg-title i{{color:var(--accent);font-size:15px}}
+.cfg-grid{{display:grid;gap:13px}}
+
+/* ── کارت کانفیگ به‌شکل بلیط دسترسی (signature element) ── */
+.cfg-card{{background:var(--card);border:1px solid var(--card-b);border-radius:18px;transition:all .2s;position:relative;overflow:hidden}}
+.cfg-card:hover{{border-color:var(--card-bh);box-shadow:var(--shadow)}}
+.cfg-top{{padding:17px 19px 15px;position:relative}}
+.cfg-top::after{{content:'';position:absolute;top:0;right:0;width:3px;height:100%;background:var(--green)}}
+.cfg-card.inactive .cfg-top::after{{background:var(--red)}}
+.cfg-head{{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:12px;flex-wrap:wrap}}
+.cfg-label{{font-size:14.5px;font-weight:700;color:var(--t1)}}
+.cfg-badges{{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}}
+.proto-chip{{font-size:9px;padding:3px 8px;border-radius:7px;font-weight:800;letter-spacing:.02em}}
+.pc-ws{{background:var(--accent-d);color:var(--accent2)}}
+.pc-xhttp{{background:var(--purple-bg);color:var(--purple-t)}}
+.pc-ultra{{background:var(--green-bg);color:var(--green-t)}}
+.cfg-status{{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}}
+.cfg-status.ok{{background:var(--green-bg);color:var(--green-t)}}
+.cfg-status.no{{background:var(--red-bg);color:var(--red-t)}}
+.cfg-usage{{margin-bottom:4px}}
+.ubar{{height:6px;border-radius:4px;background:rgba(96,148,246,0.1);overflow:hidden;margin-bottom:5px}}
+.ubar-f{{height:100%;border-radius:4px;transition:width .5s ease}}
+.utxt{{font-size:10px;color:var(--t3);display:flex;justify-content:space-between}}
+
+/* خط جداکننده‌ی بلیطی با دندانه‌های گرد، شبیه پاره‌خط بُرد بلیط */
+.cfg-tear{{position:relative;height:0;border-top:1.5px dashed var(--card-b);margin:0 19px}}
+.cfg-tear::before,.cfg-tear::after{{content:'';position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:var(--bg);transform:translateY(-50%);border:1px solid var(--card-b)}}
+.cfg-tear::before{{right:-28px}}
+.cfg-tear::after{{left:-28px}}
+
+.cfg-bottom{{padding:15px 19px 18px}}
+.cfg-link-toggle{{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;background:transparent;border:1px dashed var(--card-b);border-radius:11px;padding:10px 13px;cursor:pointer;font-family:inherit;color:var(--t2);font-size:11.5px;font-weight:600;transition:.15s}}
+.cfg-link-toggle:hover{{background:var(--accent-d);border-color:var(--card-bh);color:var(--accent2)}}
+.cfg-link-toggle .ltl{{display:flex;align-items:center;gap:7px}}
+.cfg-link-toggle i.ti-chevron-down{{transition:transform .2s}}
+.cfg-link-toggle.open i.ti-chevron-down{{transform:rotate(180deg)}}
+.cfg-vless-wrap{{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease}}
+.cfg-vless-wrap.open{{grid-template-rows:1fr}}
+.cfg-vless-inner{{overflow:hidden}}
+.cfg-vless{{background:rgba(0,0,0,.22);border:1px solid var(--card-b);border-radius:10px;padding:11px 13px;font-size:9.8px;font-family:ui-monospace,monospace;color:var(--accent2);word-break:break-all;line-height:1.7;margin-top:9px;max-height:90px;overflow-y:auto}}
+[data-theme="light"] .cfg-vless{{background:rgba(46,99,214,.05)}}
+.cfg-actions{{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}}
+.btn{{font-family:inherit;font-size:11.5px;font-weight:700;border-radius:10px;padding:8px 15px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;border:none;transition:all .15s;white-space:nowrap}}
+.btn i{{font-size:13px}}
+.btn-p{{background:linear-gradient(135deg,#2F8FFF,#8B5CF6);color:#fff;box-shadow:0 3px 14px rgba(139,92,246,.35)}}
+.btn-p:hover{{background:var(--accent2)}}
+.btn-g{{background:var(--accent-d);color:var(--accent2);border:1px solid rgba(96,148,246,.16)}}
+.btn-g:hover{{background:rgba(96,148,246,.2)}}
+.btn-pur{{background:var(--purple-bg);color:var(--purple-t);border:1px solid rgba(157,123,240,.2)}}
+.btn-pur:hover{{background:rgba(157,123,240,.22)}}
+.conn-chip{{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;padding:3px 8px;border-radius:20px;background:var(--green-bg);color:var(--green-t);font-weight:700}}
+.dot{{width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}}
+@keyframes pulse{{0%,100%{{opacity:1}}50%{{opacity:.25}}}}
+
+/* ── صفحه‌ی قفل / رمز ── */
+.lock-stage{{display:flex;align-items:center;justify-content:center;min-height:78vh;padding:20px 0}}
+.lock-card{{background:var(--card);border:1px solid var(--card-b);border-radius:26px;padding:0;text-align:center;max-width:380px;width:100%;box-shadow:var(--shadow);overflow:hidden;position:relative}}
+.lock-banner{{background:linear-gradient(150deg,rgba(59,124,246,.16),rgba(59,124,246,.02) 70%);padding:38px 30px 26px;position:relative}}
+.lock-shield{{width:64px;height:64px;border-radius:18px;background:var(--accent-d);border:1px solid var(--card-bh);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;position:relative}}
+.lock-shield::after{{content:'';position:absolute;inset:-7px;border-radius:22px;border:1px solid var(--card-b);animation:breathe 2.6s ease-in-out infinite}}
+@keyframes breathe{{0%,100%{{transform:scale(1);opacity:.5}}50%{{transform:scale(1.08);opacity:0}}}}
+.lock-shield i{{font-size:28px;color:var(--accent2)}}
+.lock-title{{font-size:18px;font-weight:800;margin-bottom:6px;color:var(--t1);letter-spacing:-.01em}}
+.lock-sub{{font-size:12px;color:var(--t3);line-height:1.7}}
+.lock-form{{padding:24px 30px 30px}}
+.lock-field{{position:relative;margin-bottom:13px}}
+.lock-inp{{width:100%;padding:13px 44px 13px 44px;border-radius:13px;border:1px solid var(--card-b);background:rgba(0,0,0,.2);color:var(--t1);font-family:inherit;font-size:14px;outline:none;text-align:center;letter-spacing:.14em;transition:.18s}}
+[data-theme="light"] .lock-inp{{background:rgba(46,99,214,.04)}}
+.lock-inp:focus{{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-d)}}
+.lock-eye{{position:absolute;left:13px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;padding:4px;display:flex}}
+.lock-eye:hover{{color:var(--accent2)}}
+.lock-lockicon{{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:15px;pointer-events:none}}
+.lock-err{{color:var(--red-t);font-size:11.5px;margin-bottom:10px;min-height:16px;display:flex;align-items:center;justify-content:center;gap:5px}}
+.lock-btn{{width:100%;justify-content:center;padding:13px;font-size:13px;border-radius:13px}}
+.lock-footer{{padding:14px 30px;border-top:1px solid var(--card-b);font-size:10px;color:var(--t3);display:flex;align-items:center;justify-content:center;gap:6px}}
+
+.empty-state{{text-align:center;padding:80px 20px;color:var(--t3)}}
+.empty-state i{{font-size:38px;display:block;margin-bottom:14px}}
+
+.toast{{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--card);border:1px solid var(--card-b);color:var(--t1);border-radius:12px;padding:10px 20px;font-size:12.5px;font-weight:600;opacity:0;transition:all .25s;z-index:999;pointer-events:none;display:flex;align-items:center;gap:7px;box-shadow:var(--shadow);white-space:nowrap}}
+.toast.show{{opacity:1;transform:translateX(-50%) translateY(0)}}
+.toast.ok{{border-color:rgba(31,184,126,.35);background:var(--green-bg);color:var(--green-t)}}
+
+.qr-modal{{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:600;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:20px}}
+.qr-modal.open{{display:flex}}
+.qr-box{{background:var(--card);border:1px solid var(--card-b);border-radius:22px;padding:26px;text-align:center;max-width:340px;width:100%;box-shadow:var(--shadow)}}
+.qr-title{{font-size:13.5px;font-weight:800;margin-bottom:16px;color:var(--t1)}}
+.qr-img{{border-radius:14px;overflow:hidden;margin-bottom:15px}}
+.qr-img img{{width:100%;display:block;background:#fff;padding:10px;border-radius:14px}}
+
+.footer{{text-align:center;padding-top:28px;font-size:10.5px;color:var(--t3)}}
+.footer a{{color:var(--accent2);font-weight:700}}
+
+@media(max-width:520px){{
+  .stats-bar{{grid-template-columns:1fr 1fr}}
+  .stats-bar .stat-card:nth-child(3){{grid-column:1/-1}}
+  .sub-name{{font-size:19px}}
+  .copy-all-bar{{flex-direction:column;align-items:stretch}}
+  .copy-all-btn{{justify-content:center}}
+  .wrap{{padding:16px 12px 50px}}
+  .lock-banner{{padding:32px 22px 22px}}
+  .lock-form{{padding:20px 22px 26px}}
+}}
+@keyframes spin{{to{{transform:rotate(360deg)}}}}
+</style>
+</head>
+<body>
+<div class="bg-fx"></div><div class="grid-fx"></div>
+<div class="toast" id="toast"></div>
+<div class="qr-modal" id="qr-modal" onclick="this.classList.remove('open')">
+  <div class="qr-box" onclick="event.stopPropagation()">
+    <div class="qr-title" id="qr-label">QR Code</div>
+    <div class="qr-img"><img id="qr-img" src="" alt="QR"></div>
+    <button class="btn btn-g" style="width:100%;justify-content:center" onclick="document.getElementById('qr-modal').classList.remove('open')"><i class="ti ti-x"></i> بستن</button>
+  </div>
+</div>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <div class="brand-img"><img src="data:image/png;base64,{LOGO_B64}" alt="X4G"></div>
+      <div><div class="brand-name">X4G</div><div class="brand-sub">v9.8</div></div>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="theme-toggle" onclick="toggleTheme()" title="تغییر تم"><i class="ti ti-sun" id="theme-icon"></i></button>
+      
+    </div>
+  </div>
+  <div id="root">
+    <div class="empty-state"><i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i>در حال بارگذاری...</div>
+  </div>
+  <div class="footer">پشتیبانی: <a href="https://t.me/M5GHUB" target="_blank">@M5GHUB</a> · M5G v9.8</div>
+</div>
+<script>
+const UUID_KEY='{uuid_key}';
+let savedPw='';
+
+let isDark=localStorage.getItem('M5G-pub-theme')!=='light';
+function applyTheme(dark){{
+  document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+  document.getElementById('theme-icon').className='ti '+(dark?'ti-sun':'ti-moon');
+}}
+function toggleTheme(){{isDark=!isDark;localStorage.setItem('M5G-pub-theme',isDark?'dark':'light');applyTheme(isDark)}}
+applyTheme(isDark);
+
+function toast(msg,type=''){{
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show'+(type?' '+type:'');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}}
+function esc(s){{return String(s||'').replace(/[&<>"']/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}}[c]))}}
+function fmtB(b){{if(!b||b===0)return '0 B';if(b<1024)return b+' B';if(b<1024**2)return (b/1024).toFixed(1)+' KB';if(b<1024**3)return (b/1024**2).toFixed(2)+' MB';return (b/1024**3).toFixed(2)+' GB'}}
+function toFa(n){{return String(n).replace(/\\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d])}}
+function protoChip(p){{
+  if(p&&p.startsWith('xhttp'))return '<span class="proto-chip pc-xhttp"><i class="ti ti-bolt"></i> XHTTP · auto</span>';
+  return '<span class="proto-chip pc-ws">VLESS · WS</span>';
+}}
+
+function showQR(label,link){{
+  document.getElementById('qr-label').textContent=label;
+  document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=260x260&data='+encodeURIComponent(link);
+  document.getElementById('qr-modal').classList.add('open');
+}}
+
+function toggleLink(i){{
+  const wrap=document.getElementById('vw-'+i);
+  const btn=document.getElementById('vt-'+i);
+  const open=wrap.classList.toggle('open');
+  btn.classList.toggle('open',open);
+  btn.querySelector('.ltl span').textContent = open ? 'پنهان کردن لینک' : 'نمایش لینک کانفیگ';
+}}
+
+async function loadData(pw=''){{
+  const url='/api/public/sub/'+UUID_KEY+(pw?'?pw='+encodeURIComponent(pw):'');
+  const r=await fetch(url);
+  return r.json();
+}}
+
+function renderLock(name,errMsg=''){{
+  document.getElementById('root').innerHTML=`
+    <div class="lock-stage">
+      <div class="lock-card">
+        <div class="lock-banner">
+          <div class="lock-shield"><i class="ti ti-shield-lock"></i></div>
+          <div class="lock-title">${{esc(name)}}</div>
+          <div class="lock-sub">این گروه با رمز محافظت شده. برای دیدن کانفیگ‌ها رمز رو وارد کنید.</div>
+        </div>
+        <div class="lock-form">
+          <div class="lock-err" id="lock-err">${{errMsg ? '<i class="ti ti-alert-circle"></i> '+esc(errMsg) : ''}}</div>
+          <div class="lock-field">
+            <i class="ti ti-lock lock-lockicon"></i>
+            <input class="lock-inp" type="password" id="lock-pw" placeholder="••••••••" autofocus>
+            <button class="lock-eye" type="button" onclick="togglePwVis()"><i class="ti ti-eye" id="lock-eye-icon"></i></button>
+          </div>
+          <button class="btn btn-p lock-btn" onclick="submitLock()"><i class="ti ti-lock-open"></i> ورود به گروه</button>
+        </div>
+        <div class="lock-footer"><i class="ti ti-shield-check"></i> اتصال شما رمزنگاری‌شده است</div>
+      </div>
+    </div>
+  `;
+  const inp=document.getElementById('lock-pw');
+  inp.addEventListener('keydown',e=>{{if(e.key==='Enter')submitLock()}});
+}}
+
+function togglePwVis(){{
+  const inp=document.getElementById('lock-pw');
+  const icon=document.getElementById('lock-eye-icon');
+  const toText = inp.type==='password';
+  inp.type = toText ? 'text' : 'password';
+  icon.className = 'ti '+(toText ? 'ti-eye-off' : 'ti-eye');
+}}
+
+async function submitLock(){{
+  const pw=document.getElementById('lock-pw').value;
+  const data=await loadData(pw);
+  if(data.locked){{renderLock(data.name,'رمز اشتباه است');return}}
+  savedPw=pw;
+  renderContent(data);
+}}
+
+function renderContent(d){{
+  const activeCount=d.links.filter(l=>l.active).length;
+  const baseSubUrl = d.sub_url || (window.location.protocol + '//' + window.location.host + '/p/' + UUID_KEY);
+  const subUrl = baseSubUrl;
+
+  window._x4gSubUrl  = subUrl;
+  window._x4gSubName = d.name;
+  window._x4gLinks   = d.links.map(l => ({{
+    vless : l.vless_link,
+    sub   : l.sub_url,
+    label : l.label,
+  }}));
+
+  document.getElementById('root').innerHTML=`
+    <div class="sub-info">
+      <div class="sub-eyebrow"><i class="ti ti-folders"></i> گروه دسترسی</div>
+      <div class="sub-name">${{esc(d.name)}}</div>
+      ${{d.desc ? `<div class="sub-desc">${{esc(d.desc)}}</div>` : ''}}
+      <div class="sub-meta-row"><i class="ti ti-clock"></i> آخرین بروزرسانی: ${{new Date().toLocaleTimeString('fa-IR')}}</div>
+      <div class="sub-sub-box">
+        <span class="sub-sub-url">${{esc(subUrl)}}</span>
+        <button class="btn btn-pur" style="padding:7px 12px;font-size:10.5px"
+          onclick="navigator.clipboard.writeText(window._x4gSubUrl).then(()=>toast('لینک ساب کپی شد ✓','ok'))">
+          <i class="ti ti-copy"></i> کپی لینک ساب
+        </button>
+        <button class="btn btn-g" style="padding:7px 12px;font-size:10.5px"
+          onclick="showQR(window._x4gSubName + ' — کل گروه', window._x4gSubUrl)">
+          <i class="ti ti-qrcode"></i> QR کل
+        </button>
+      </div>
+    </div>
+
+    <div class="copy-all-bar">
+      <div class="copy-all-text">
+        <div class="copy-all-title"><i class="ti ti-copy"></i> کپی همه‌ی کانفیگ‌ها</div>
+        <div class="copy-all-sub">تمام لینک‌های فعال این گروه را یک‌جا کپی کن</div>
+      </div>
+      <button class="copy-all-btn" onclick="copyAllConfigs()"><i class="ti ti-clipboard-copy"></i> کپی همه (${{toFa(activeCount)}})</button>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-label">کانفیگ‌های فعال</div>
+        <div class="stat-val">${{toFa(activeCount)}}</div>
+        <div class="stat-sub">از ${{toFa(d.links.length)}} کانفیگ</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">اتصالات زنده</div>
+        <div class="stat-val">${{toFa(d.active_connections)}}</div>
+        <div class="stat-sub" style="color:var(--green-t);display:flex;align-items:center;gap:4px"><span class="dot"></span> آنلاین</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">کل مصرف</div>
+        <div class="stat-val" style="font-size:17px;margin-top:3px">${{esc(d.total_used_fmt)}}</div>
+        <div class="stat-sub">همه کانفیگ‌ها</div>
+      </div>
+    </div>
+
+    <div class="cfg-title"><i class="ti ti-link"></i> کانفیگ‌ها (${{toFa(d.links.length)}} عدد)</div>
+    <div class="cfg-grid">
+      ${{d.links.map((l, i) => {{
+        const pct = l.limit_bytes === 0 ? 0 : Math.min(100, l.used_bytes / l.limit_bytes * 100);
+        const bc  = pct > 90 ? 'var(--red)' : pct > 70 ? 'var(--amber)' : 'var(--green)';
+        const lim = l.limit_bytes === 0 ? '∞' : fmtB(l.limit_bytes);
+        return `
+          <div class="cfg-card${{l.active ? '' : ' inactive'}}">
+            <div class="cfg-top">
+              <div class="cfg-head">
+                <div>
+                  <div class="cfg-label">${{esc(l.label)}}</div>
+                  <div class="cfg-badges">
+                    ${{protoChip(l.protocol)}}
+                    ${{l.connections > 0 ? `<span class="conn-chip"><span class="dot"></span> ${{toFa(l.connections)}} اتصال</span>` : ''}}
+                  </div>
+                </div>
+                <span class="cfg-status ${{l.active ? 'ok' : 'no'}}">${{l.active ? '<i class="ti ti-circle-check"></i> فعال' : '<i class="ti ti-circle-x"></i> غیرفعال'}}</span>
+              </div>
+              <div class="cfg-usage">
+                <div class="ubar"><div class="ubar-f" style="width:${{pct}}%;background:${{bc}}"></div></div>
+                <div class="utxt"><span>${{esc(l.used_fmt)}} مصرف شده</span><span>سهمیه: ${{lim}}</span></div>
+              </div>
+            </div>
+            <div class="cfg-tear"></div>
+            <div class="cfg-bottom">
+              <button class="cfg-link-toggle" id="vt-${{i}}" onclick="toggleLink(${{i}})">
+                <span class="ltl"><i class="ti ti-eye"></i> <span>نمایش لینک کانفیگ</span></span>
+                <i class="ti ti-chevron-down"></i>
+              </button>
+              <div class="cfg-vless-wrap" id="vw-${{i}}">
+                <div class="cfg-vless-inner">
+                  <div class="cfg-vless">${{esc(l.vless_link)}}</div>
+                </div>
+              </div>
+              <div class="cfg-actions">
+                <button class="btn btn-p"
+                  onclick="navigator.clipboard.writeText(window._x4gLinks[${{i}}].vless).then(()=>toast('لینک کپی شد ✓','ok'))">
+                  <i class="ti ti-copy"></i> کپی لینک
+                </button>
+                <button class="btn btn-g"
+                  onclick="showQR(window._x4gLinks[${{i}}].label, window._x4gLinks[${{i}}].vless)">
+                  <i class="ti ti-qrcode"></i> QR
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }}).join('')}}
+    </div>
+  `;
+  setTimeout(() => autoRefresh(), 30000);
+}}
+
+function copyAllConfigs(){{
+  const links=window._x4gLinks||[];
+  if(!links.length){{toast('کانفیگی برای کپی نیست','');return}}
+  const text=links.map(l=>l.vless).join('\\n');
+  navigator.clipboard.writeText(text).then(()=>toast('همه‌ی '+toFa(links.length)+' کانفیگ کپی شد ✓','ok'));
+}}
+
+async function autoRefresh(){{
+  try{{
+    const data = await loadData(savedPw);
+    if (!data.locked) renderContent(data);
+  }} catch(e) {{}}
+}}
+
+async function init(){{
+  try{{
+    const data = await loadData();
+    if (data.locked) {{ renderLock(data.name); return; }}
+    renderContent(data);
+  }} catch(e) {{
+    document.getElementById('root').innerHTML =
+      '<div class="empty-state" style="color:var(--red-t)"><i class="ti ti-alert-circle"></i>خطا در بارگذاری</div>';
+  }}
+}}
+
+init();
+</script>
+</body></html>"""
