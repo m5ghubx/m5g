@@ -1,3 +1,3 @@
 # m5g
 تمامی اطلاعات در چنل تلگرام
-t.me/irnet_fa
+t.me/M5GHUB
